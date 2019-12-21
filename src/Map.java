@@ -7,20 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Map {
-    private Integer[][] matrix;
+    private Point[][] matrix;
 
-    public static Integer VERY_TRASHY = 5;
-    public static Integer TRASHY = 4;
-    public static Integer LOW_TRASHY = 3;
-    public static Integer FAILER = 2;
-    public static Integer CLEAN = 1;
-    public static Integer BEEN_HERE = 6;
+    public static Integer REGULAR = 1;
+    public static Integer BEEN_HERE = 2;
+    public static Integer BORDER = 3;
     public static Integer VACUUM = 9;
 
     public static HashMap<Integer, Boolean> hash_map = new HashMap<>();
 
 
-    private Map(Integer[][] matrix) {
+    private Map(Point[][] matrix) {
         this.matrix = matrix;
     }
 
@@ -34,7 +31,7 @@ public class Map {
         List<String> size = Arrays.asList(str.trim().split(","));
         Integer height = Integer.parseInt(size.get(0));
         Integer width = Integer.parseInt(size.get(1));
-        Integer matrix[][] = new Integer[height][width];
+        Point matrix[][] = new Point[height][width];
         for (int i = 0; i < height; ++i) {
             str = br.readLine();
             List<String> info = Arrays.asList(str.trim().split(" "));
@@ -42,7 +39,10 @@ public class Map {
                 if (!Map.isValidNumber(Integer.parseInt(info.get(j)))) {
                     throw new IOException("Invalid number");
                 }
-                matrix[i][j] = Integer.parseInt(info.get(j));
+                Point p = new Point(i, j);
+                p.setValue(Integer.parseInt(info.get(j)));
+                matrix[i][j] = p;
+
 
             }
         }
@@ -54,7 +54,7 @@ public class Map {
         for (int i = 0; i < this.matrix.length; ++i) {
             System.out.println();
             for (int j = 0; j < this.matrix[i].length; ++j)
-                System.out.print(this.matrix[i][j] + " ");
+                System.out.print(this.matrix[i][j].getValue() + " ");
         }
     }
 
@@ -63,8 +63,8 @@ public class Map {
     }
 
     public void agentMove(Agent a,Integer i, Integer j) {
-        this.matrix[a.getLocation().x][a.getLocation().y] = BEEN_HERE;
-        this.matrix[i][j] = VACUUM;
+        this.matrix[a.getLocation().getX()][a.getLocation().getY()].setValue(BEEN_HERE);
+        this.matrix[i][j].setValue(VACUUM);
         //to-do - set agent location, maybe with administrator
     }
 
@@ -77,13 +77,19 @@ public class Map {
         if (!Map.hash_map.isEmpty()) {
             return;
         }
-        Map.hash_map.put(Map.CLEAN, true);
-        Map.hash_map.put(Map.FAILER, true);
-        Map.hash_map.put(Map.TRASHY, true);
-        Map.hash_map.put(Map.LOW_TRASHY, true);
-        Map.hash_map.put(Map.VERY_TRASHY, true);
+        Map.hash_map.put(Map.REGULAR, true);
         Map.hash_map.put(Map.VACUUM, true);
         Map.hash_map.put(Map.BEEN_HERE, true);
+        Map.hash_map.put(Map.BORDER, true);
+    }
+
+    public Point getAgentLocation() {
+        for (int i = 0; i < this.matrix.length; ++i) {
+            for (int j = 0; j < this.matrix[i].length; ++j)
+                if (this.matrix[i][j].getValue() == VACUUM)
+                    return new Point(i, j);
+        }
+        return new Point(-1, -1);
     }
 
 
