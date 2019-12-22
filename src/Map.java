@@ -31,7 +31,7 @@ public class Map {
         List<String> size = Arrays.asList(str.trim().split(","));
         Integer height = Integer.parseInt(size.get(0));
         Integer width = Integer.parseInt(size.get(1));
-        Point matrix[][] = new Point[height][width];
+        Point matrix[][] = new Point[width][height];
         for (int i = 0; i < height; ++i) {
             str = br.readLine();
             List<String> info = Arrays.asList(str.trim().split(" "));
@@ -39,11 +39,9 @@ public class Map {
                 if (!Map.isValidNumber(Integer.parseInt(info.get(j)))) {
                     throw new IOException("Invalid number");
                 }
-                Point p = new Point(i, j);
+                Point p = new Point(j, i);
                 p.setValue(Integer.parseInt(info.get(j)));
-                matrix[i][j] = p;
-
-
+                matrix[j][i] = p;
             }
         }
         br.close();
@@ -51,21 +49,21 @@ public class Map {
     }
 
     public void printMap() {
-        for (int i = 0; i < this.matrix.length; ++i) {
+        for (int i =0; i < this.matrix[0].length; i++) {
             System.out.println();
-            for (int j = 0; j < this.matrix[i].length; ++j)
-                System.out.print(this.matrix[i][j].getValue() + " ");
+            for(int j = 0 ; j<this.matrix.length; j++){
+                System.out.print(this.matrix[j][i].getValue()+ " ");
+            }
         }
     }
 
-    public Boolean legalMove(Integer i, Integer j) {
-        return (i < this.matrix.length) && (j < this.matrix[i].length);
+    public Boolean legalMove(Point p) {
+        return (this.matrix[p.getX()][ p.getY()].getValue() != BORDER);
     }
 
-    public void agentMove(Agent a,Integer i, Integer j) {
-        this.matrix[a.getLocation().getX()][a.getLocation().getY()].setValue(BEEN_HERE);
-        this.matrix[i][j].setValue(VACUUM);
-        //to-do - set agent location, maybe with administrator
+    public void agentMove(Agent a,Point oldPoint, Point newPoint) {
+        this.matrix[oldPoint.getX()][oldPoint.getY()].setValue(BEEN_HERE);
+        this.matrix[newPoint.getX()][newPoint.getY()].setValue(VACUUM);
     }
 
     private static Boolean isValidNumber(Integer i) {

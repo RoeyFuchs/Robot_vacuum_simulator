@@ -11,4 +11,10 @@ public class DummyAgent implements Agent {
         this.y = p.getY();
     }
 
+    @Override
+    //agent strategy
+    public Point selectStep(PartialMap m) {
+        return new Point(this.x+1, this.y);
+    }
+
 }
