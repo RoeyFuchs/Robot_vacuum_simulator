@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -5,8 +6,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Observable;
 
-public class Map {
+public class Map extends Observable {
     private Point[][] matrix;
 
     public static Integer REGULAR = 1;
@@ -48,13 +50,21 @@ public class Map {
         return new Map(matrix);
     }
 
-    public void printMap() {
+
+    public String getMapAsString() {
+        StringBuilder s = new StringBuilder();
         for (int i =0; i < this.matrix[0].length; i++) {
-            System.out.println();
+            s.append('\n');
             for(int j = 0 ; j<this.matrix.length; j++){
-                System.out.print(this.matrix[j][i].getValue()+ " ");
+                s.append(this.matrix[j][i].getValue());
+                s.append(" ");
             }
         }
+        return s.toString();
+    }
+
+    public void printMap() {
+        System.out.println(getMapAsString());
     }
 
     public Boolean legalMove(Point p) {
@@ -64,6 +74,7 @@ public class Map {
     public void agentMove(Agent a,Point oldPoint, Point newPoint) {
         this.matrix[oldPoint.getX()][oldPoint.getY()].setValue(BEEN_HERE);
         this.matrix[newPoint.getX()][newPoint.getY()].setValue(VACUUM);
+        this.notifyObservers();
     }
 
     private static Boolean isValidNumber(Integer i) {
@@ -91,5 +102,8 @@ public class Map {
     }
 
 
-
+    @Override
+    public void notifyObservers() {
+        super.notifyObservers(this.getMapAsString());
+    }
 }

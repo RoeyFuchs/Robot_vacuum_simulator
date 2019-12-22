@@ -12,11 +12,14 @@ public class Main {
         Administrator admin = new Administrator(map, agent);
 
         int numberOfSteps = 5;
+        MapLogger mapLogger = new MapLogger();
+        map.addObserver(mapLogger);
         for(int i = 0 ; i < numberOfSteps; i++) {//we need to change it
             map.printMap();
             admin.doOneStep();
             System.out.println();
         }
+        mapLogger.save();
 
 
     }
