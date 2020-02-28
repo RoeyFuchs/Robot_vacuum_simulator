@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class DummyAgent implements Agent {
     private int x;
     private int y;
@@ -11,10 +13,16 @@ public class DummyAgent implements Agent {
         this.y = p.getY();
     }
 
-    @Override
+
     //agent strategy
-    public Point selectStep(PartialMap m) {
+    public Point selectStep(Map m) {
         return new Point(this.x+1, this.y);
     }
+
+    @Override
+    public List<String> calculateSteps(){
+        return null;
+    }
+
 
 }

@@ -12,21 +12,16 @@ public class Administrator {
         this.agent.add(agent);
     }
 
-
+/*
     public void doOneStep() {
         for (Agent a : this.agent) {
-            Point newPoint = a.selectStep(this.getPartialMap());
+            Point newPoint = a.selectStep(this.map);
             if (this.map.legalMove(newPoint)) {
                 Point oldPoint = a.getLocation();
                 this.map.agentMove(a, oldPoint, newPoint);
                 a.setLocation(newPoint);
             }
         }
-    }
+    }*/
 
-    private PartialMap getPartialMap() {
-
-        /// ...
-        return new PartialMap();
-    }
 }

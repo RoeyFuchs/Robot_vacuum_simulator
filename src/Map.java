@@ -100,7 +100,23 @@ public class Map extends Observable {
         }
         return new Point(-1, -1);
     }
-
+   public Point getLocation(Point point){
+        return matrix[point.getX()][point.getY()];
+   }
+   public void updateVisit(Point point){
+        matrix[point.getX()][point.getY()].here();
+   }
+    public boolean isBeenHere(Point point){
+        if(matrix[point.getX()][point.getY()].getValue()==BEEN_HERE)
+            return true;
+        return false;
+    }
+    public int getRowsNumber(){
+        return matrix.length;
+    }
+    public int getColumnsNumber(){
+        return matrix.length;
+    }
 
     @Override
     public void notifyObservers() {

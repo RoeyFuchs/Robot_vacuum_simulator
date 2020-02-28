@@ -51,4 +51,6 @@ public class Point {
         this.beenHereCounter++;
     }
 
+
+
 }

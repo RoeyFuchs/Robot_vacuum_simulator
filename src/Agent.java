@@ -1,7 +1,9 @@
+import java.util.List;
 
 public interface Agent {
 
     public Point getLocation();
     public void setLocation(Point p);
-    public Point selectStep(PartialMap m);
+    public List<String> calculateSteps();
+
 }

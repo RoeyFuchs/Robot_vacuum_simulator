@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
         System.out.println("Good luck");
@@ -8,6 +10,15 @@ public class Main {
             e.printStackTrace();
             System.out.println(e.getStackTrace());
         }
+        Agent agent=new DFSAgent(map);
+        List<String> mapSteps=agent.calculateSteps();
+        int i=0;
+        for (String m:mapSteps) {
+            System.out.println(i);
+            i++;
+            System.out.println(m);
+        }
+        /*
         Agent agent = new DummyAgent();
         Administrator admin = new Administrator(map, agent);
 
@@ -19,7 +30,7 @@ public class Main {
             admin.doOneStep();
             System.out.println();
         }
-        mapLogger.save();
+        mapLogger.save();*/
 
 
     }
