@@ -36,8 +36,7 @@ class ShortestPath {
         }
     }
 
-    // These arrays are used to get row and column
-// numbers of 4 neighbours of a given cell 
+    //row and columns of 4 neighbors
     static int rowNum[] = {-1, 0, 0, 1};
     static int colNum[] = {0, -1, 1, 0};
 
@@ -45,7 +44,7 @@ class ShortestPath {
         Stack<Point> path=new Stack<>();
         Point currentPoint=dst;
         path.push(dst);
-        while (!(currentPoint.getX()==src.getX()&&currentPoint.getY()==src.getY())){
+        while (!(currentPoint.isSameLocation(src))){
             path.push(visitedPoints[currentPoint.getX()][currentPoint.getY()].GetCameFrom());
             currentPoint=visitedPoints[currentPoint.getX()][currentPoint.getY()].GetCameFrom();
         }
@@ -63,13 +62,13 @@ class ShortestPath {
             }
         visited[src.getX()][src.getY()].SetIsVisited(true);
         Queue<Point> q = new LinkedList<>();
-        q.add(src); // Enqueue source cell
+        q.add(src);
 
         // BFS searching
         while (!q.isEmpty()) {
             Point pt = q.peek();
 
-            if (pt.getX() == dest.getX() && pt.getY() == dest.getY())
+            if (pt.isSameLocation(dest))
                 return GetPath(visited,src,dest);
             q.remove();
             for (int i = 0; i < 4; i++) {
@@ -80,9 +79,9 @@ class ShortestPath {
                 if (isValid(row, col) &&map.legalMove(new Point(row,col)) &&!visited[row][col].GetIsVisited()) {
                     // mark cell as visited and enqueue it
                     visited[row][col].SetIsVisited(true);
-                    Point Adjcell =(new Point(row, col));
+                    Point adjcell =(new Point(row, col));
                     visited[row][col].SetCameFrom(pt);
-                    q.add(Adjcell);
+                    q.add(adjcell);
                 }
             }
         }

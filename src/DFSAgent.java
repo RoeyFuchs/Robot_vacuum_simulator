@@ -31,8 +31,7 @@ public class DFSAgent extends BasicAgent  {
             Stack<Point>path=shortestPath.BFS(super.map.getAgentLocation(),point);
             while (!path.empty()){
                 Point p=path.peek();
-                if(!(p.getX()==super.map.getAgentLocation().getX()&&
-                p.getY()==super.map.getAgentLocation().getY())) {
+                if(!(p.isSameLocation(super.map.getAgentLocation()))) {
                     map.agentMove(this, super.map.getAgentLocation(), p);
                     mapSteps.add(map.getMapAsString());
                 }

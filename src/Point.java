@@ -51,6 +51,13 @@ public class Point {
         this.beenHereCounter++;
     }
 
+    public boolean isSameLocation(Point p){
+        if(this.getX()==p.getX()&& this.getY()==p.getY()){
+            return true;
+        }
+        return false;
+    }
+
 
 
 }
