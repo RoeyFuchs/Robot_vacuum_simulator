@@ -15,9 +15,15 @@ abstract public class BasicAgent implements Agent {
     public void setLocation(Point p){
         map.agentMove(this,map.getAgentLocation(),p);
     }
-    public void calculateShortestPath(Point s, Point t){
 
+    public Boolean legalMove(Point p) {
+        return map.legalMove(p);
     }
+    public Boolean isBeenHere(Point p){
+        return map.isBeenHere(p);
+    }
+    public abstract int checkValueOfPoint(Point p);
+
 
 
 
