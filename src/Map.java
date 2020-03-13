@@ -115,7 +115,7 @@ public class Map extends Observable {
         return matrix.length;
     }
     public int getColumnsNumber(){
-        return matrix.length;
+        return matrix[0].length;
     }
 
     @Override

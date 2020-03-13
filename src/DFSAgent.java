@@ -26,6 +26,8 @@ public class DFSAgent extends BasicAgent  {
         if(rows==0)
             return null;
         int columns=super.map.getColumnsNumber();
+        if(columns==0)
+            return null;
         Stack<Point> stack=new Stack<>();
         stack.push(super.map.getAgentLocation());
         while (stack.empty()==false){
@@ -41,18 +43,33 @@ public class DFSAgent extends BasicAgent  {
                 }
                 path.pop();
             }
-            //go left
-            if(super.legalMove(new Point(point.getX(),point.getY()-1)))
-                stack.push(new Point(point.getX(),point.getY()-1));
-            //go right
-            if(super.legalMove(new Point(point.getX(),point.getY()+1)))
-                stack.push(new Point(point.getX(),point.getY()+1));
-            //go up
+            //north
             if(super.legalMove(new Point(point.getX()-1,point.getY())))
                 stack.push(new Point(point.getX()-1,point.getY()));
-            //go down
+            //northEast
+            if(super.legalMove(new Point(point.getX()-1,point.getY()+1))){
+                stack.push(new Point(point.getX()-1,point.getY()+1));
+            }
+            //east
+            if(super.legalMove(new Point(point.getX(),point.getY()+1)))
+                stack.push(new Point(point.getX(),point.getY()+1));
+            //south east
+            if(super.legalMove(new Point(point.getX()+1,point.getY()+1))){
+                stack.push(new Point(point.getX()+1,point.getY()+1));
+            }
+            //south
             if(super.legalMove(new Point(point.getX()+1,point.getY())))
                 stack.push(new Point(point.getX()+1,point.getY()));
+            //south west
+            if(super.legalMove(new Point(point.getX()+1,point.getY()-1)))
+                stack.push(new Point(point.getX()+1,point.getY()-1));
+            //west
+            if(super.legalMove(new Point(point.getX(),point.getY()-1)))
+                stack.push(new Point(point.getX(),point.getY()-1));
+            //north west
+            if(super.legalMove(new Point(point.getX()-1,point.getY()-1)))
+                stack.push(new Point(point.getX()-1,point.getY()-1));
+
         }
         return mapSteps;
     }
