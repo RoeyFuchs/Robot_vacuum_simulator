@@ -10,10 +10,7 @@ public class DFSAgent extends BasicAgent  {
         super(map);
     }
 
-    @Override
-    public int checkValueOfPoint(Point p) {
-        return 0;
-    }
+
 
     public List<String> calculateSteps(){
         List<String> mapSteps= new LinkedList<>();

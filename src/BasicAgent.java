@@ -22,7 +22,9 @@ abstract public class BasicAgent implements Agent {
     public Boolean isBeenHere(Point p){
         return map.isBeenHere(p);
     }
-    public abstract int checkValueOfPoint(Point p);
+    public  int checkValueOfPoint(Point p){
+        return 0;
+    }
     public void agentMove(Point oldPoint, Point newPoint){
         map.agentMove(oldPoint, newPoint);
     }
