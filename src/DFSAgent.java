@@ -38,7 +38,7 @@ public class DFSAgent extends BasicAgent  {
             while (!path.empty()){
                 Point p=path.peek();
                 if(!(p.isSameLocation(super.map.getAgentLocation()))) {
-                    map.agentMove(this, super.map.getAgentLocation(), p);
+                    super.agentMove( super.map.getAgentLocation(), p);
                     mapSteps.add(map.getMapAsString());
                 }
                 path.pop();
