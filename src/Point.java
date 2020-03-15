@@ -7,6 +7,10 @@ public class Point {
     private int beenHereCounter = 0;
 
 
+    public static Integer NO_INFO = Integer.MIN_VALUE;
+    private Integer info = NO_INFO;
+
+
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
@@ -19,6 +23,12 @@ public class Point {
     public Point(Integer value) {
         this(0, 0);
         this.value = value;
+    }
+    public Point(Point p) {
+        this.x = p.getX();
+        this.y = p.getY();
+        this.value = p.getValue();
+        this.info = p.getInfo();
     }
 
     public int getX() {
@@ -56,6 +66,14 @@ public class Point {
             return true;
         }
         return false;
+    }
+    public Integer getInfo() {
+        return info;
+    }
+
+    public Point setInfo(Integer info) {
+        this.info = info;
+        return this;
     }
 
 

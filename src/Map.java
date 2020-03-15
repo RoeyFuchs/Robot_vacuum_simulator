@@ -23,6 +23,10 @@ public class Map extends Observable {
         this.matrix = matrix;
     }
 
+    public Map(Map map) {
+        this.matrix = map.getMatrix().clone();
+    }
+
     //file start with  height, width and  and then matrix of integer as defined above
     public static Map CreateMap(String fileName) throws IOException {
         File file = new File(fileName);
@@ -33,7 +37,7 @@ public class Map extends Observable {
         List<String> size = Arrays.asList(str.trim().split(","));
         Integer height = Integer.parseInt(size.get(0));
         Integer width = Integer.parseInt(size.get(1));
-        Point matrix[][] = new Point[width][height];
+        Point matrix[][] = new Point[height][width];
         for (int i = 0; i < height; ++i) {
             str = br.readLine();
             List<String> info = Arrays.asList(str.trim().split(" "));
@@ -41,22 +45,33 @@ public class Map extends Observable {
                 if (!Map.isValidNumber(Integer.parseInt(info.get(j)))) {
                     throw new IOException("Invalid number");
                 }
-                Point p = new Point(j, i);
+                Point p = new Point(i, j);
                 p.setValue(Integer.parseInt(info.get(j)));
-                matrix[j][i] = p;
+                matrix[i][j] = p;
             }
         }
         br.close();
         return new Map(matrix);
     }
 
-
     public String getMapAsString() {
         StringBuilder s = new StringBuilder();
-        for (int i =0; i < this.matrix[0].length; i++) {
+        for (int i =0; i < this.getRowsNumber(); i++) {
             s.append('\n');
-            for(int j = 0 ; j<this.matrix.length; j++){
-                s.append(this.matrix[j][i].getValue());
+            for(int j = 0 ; j<this.getColumnsNumber(); j++){
+                s.append(this.matrix[i][j].getValue());
+                s.append(" ");
+            }
+        }
+        return s.toString();
+    }
+
+    public String getInfoMapAsString() {
+        StringBuilder s = new StringBuilder();
+        for (int i =0; i < this.getRowsNumber(); i++) {
+            s.append('\n');
+            for(int j = 0 ; j<this.getColumnsNumber(); j++){
+                s.append(this.matrix[i][j].getInfo());
                 s.append(" ");
             }
         }
@@ -66,6 +81,10 @@ public class Map extends Observable {
     public void printMap() {
         System.out.println(getMapAsString());
     }
+    public void printMapInfo() {
+        System.out.println(getInfoMapAsString());
+    }
+
 
     public Boolean legalMove(Point p) {
         return (this.matrix[p.getX()][ p.getY()].getValue() != BORDER);
@@ -101,7 +120,12 @@ public class Map extends Observable {
         return new Point(-1, -1);
     }
    public Point getLocation(Point point){
-        return matrix[point.getX()][point.getY()];
+        try {
+            return matrix[point.getX()][point.getY()];
+        }catch (Exception E) {
+            System.out.println("@!#");
+        }
+        return null;
    }
    public void updateVisit(Point point){
         matrix[point.getX()][point.getY()].here();
@@ -115,7 +139,10 @@ public class Map extends Observable {
         return matrix.length;
     }
     public int getColumnsNumber(){
-        return matrix.length;
+        return matrix[0].length;
+    }
+    public Point[][] getMatrix() {
+        return this.matrix;
     }
 
     @Override
