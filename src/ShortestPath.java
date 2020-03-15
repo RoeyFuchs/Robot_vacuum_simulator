@@ -4,6 +4,7 @@ import java.util.Stack;
 
 class ShortestPath {
     private Map map;
+    private final int NUM_OF_NEIGBORS=8;
     public ShortestPath(Map map){
         this.map=map;
     }
@@ -36,9 +37,9 @@ class ShortestPath {
         }
     }
 
-    //row and columns of 4 neighbors
-    static int rowNum[] = {-1, 0, 0, 1};
-    static int colNum[] = {0, -1, 1, 0};
+    //row and columns of 8 neighbors
+    static int rowNum[] = {-1, -1, 0, 1,1,1,0,-1};
+    static int colNum[] = {0, 1, 1, 1,0,-1,-1,-1};
 
     private Stack<Point> GetPath(VisitedPoint[][] visitedPoints, Point src, Point dst){
         Stack<Point> path=new Stack<>();
@@ -56,7 +57,7 @@ class ShortestPath {
                    Point dest) {
         VisitedPoint[][] visited = new VisitedPoint[map.getRowsNumber()][map.getColumnsNumber()];
         for (int i=0;i<map.getRowsNumber();i++){
-            for (int j=0;j<map.getRowsNumber();j++){
+            for (int j=0;j<map.getColumnsNumber();j++){
                 visited[i][j]=new VisitedPoint();
             }
             }
@@ -71,7 +72,7 @@ class ShortestPath {
             if (pt.isSameLocation(dest))
                 return GetPath(visited,src,dest);
             q.remove();
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < NUM_OF_NEIGBORS; i++) {
                 int row = pt.getX() + rowNum[i];
                 int col = pt.getY() + colNum[i];
 
