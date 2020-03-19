@@ -7,7 +7,7 @@ public class Point {
     private int beenHereCounter = 0;
 
 
-    public static Integer NO_INFO = Integer.MIN_VALUE;
+    public static Integer NO_INFO = -1;
     private Integer info = NO_INFO;
 
 

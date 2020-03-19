@@ -13,7 +13,7 @@ abstract public class BasicAgent implements Agent {
     }
 
     public void setLocation(Point p){
-        map.agentMove(map.getAgentLocation(),p);
+        //map.agentMove(map.getAgentLocation(),p);
     }
 
     public Boolean legalMove(Point p) {
@@ -26,7 +26,7 @@ abstract public class BasicAgent implements Agent {
         return 0;
     }
     public void agentMove(Point oldPoint, Point newPoint){
-        map.agentMove(oldPoint, newPoint);
+       // map.agentMove(oldPoint, newPoint);
     }
 
 
