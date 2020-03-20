@@ -15,7 +15,7 @@ public class Main {
         //WavefrontAgent agent = new WavefrontAgent(map, null);
 
 
-        MyAgent agent=new DFSAgent(map);
+        MyAgent agent=new GreedyHeuristic(map);
         Administrator admin = new Administrator(map, agent);
         map.printMap();
         int steps = 50;
