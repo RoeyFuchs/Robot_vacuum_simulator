@@ -16,7 +16,8 @@ public class Main {
 
 
         MyAgent agent=new GreedyHeuristic(map);
-        Administrator admin = new Administrator(map, agent);
+        MyAgent agent1=new DFSAgent(map);
+        Administrator admin = new Administrator(map, agent1);
         map.printMap();
         int steps = 50;
         for (int i =0; i < steps ; i++) {
