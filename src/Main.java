@@ -17,14 +17,13 @@ public class Main {
 
         MyAgent agent=new DFSAgent(map);
         Administrator admin = new Administrator(map, agent);
+        map.printMap();
         int steps = 50;
         for (int i =0; i < steps ; i++) {
             System.out.println(i);
             map.printMap();
             admin.doOneStep();
-            System.out.println(map.getNotReachYet());
         }
-        //Administrator admin = new Administrator(map, agent);
 
         /*
         while(map.getNotReachYet() != 0) {

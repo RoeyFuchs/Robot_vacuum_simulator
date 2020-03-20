@@ -15,7 +15,7 @@ public class DFSAgent implements MyAgent {
     }
 
     private void dfs(){
-        Map map=originalMap;
+        Map map= new Map(originalMap);
         int rows = map.getRowsNumber();
         int columns = map.getColumnsNumber();
         if(rows>0&&columns>0) {
@@ -64,6 +64,8 @@ public class DFSAgent implements MyAgent {
 
             }
         }
+        System.out.println("Map after DFS scan:");
+        System.out.println(originalMap.getMapAsString());
     }
 
     @Override
