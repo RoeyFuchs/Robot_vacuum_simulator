@@ -6,7 +6,7 @@ public class Administrator {
     private List<MyAgent> agent = new LinkedList<>();
 
 
-    public Administrator(Map map, WavefrontAgent agent) {
+    public Administrator(Map map, MyAgent agent) {
         this.map = map;
         agent.setLocation(map.getAgentLocation());
         this.agent.add(agent);
@@ -15,7 +15,7 @@ public class Administrator {
     public void doOneStep() {
         for (MyAgent a : this.agent) {
             Point newPoint = a.doStep();
-            if (this.map.legalMove(newPoint)) {
+            if (newPoint!= null &&this.map.legalMove(newPoint)) {
                 Point oldPoint = a.getLocation();
                 this.map.agentMove(a, oldPoint, newPoint);
                 a.setLocation(newPoint);

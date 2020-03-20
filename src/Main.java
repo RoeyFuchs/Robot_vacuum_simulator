@@ -10,14 +10,28 @@ public class Main {
             e.printStackTrace();
             System.out.println(e.getStackTrace());
         }
-        WavefrontAgent agent = new WavefrontAgent(map, null);
+
+
+        //WavefrontAgent agent = new WavefrontAgent(map, null);
+
+
+        MyAgent agent=new DFSAgent(map);
         Administrator admin = new Administrator(map, agent);
+        int steps = 50;
+        for (int i =0; i < steps ; i++) {
+            System.out.println(i);
+            map.printMap();
+            admin.doOneStep();
+            System.out.println(map.getNotReachYet());
+        }
+        //Administrator admin = new Administrator(map, agent);
 
         /*
         while(map.getNotReachYet() != 0) {
             map.printMap();
             admin.doOneStep();
         }*/
+        /*
         int steps = 1000;
         for (int i =0; i < steps ; i++) {
             System.out.println(i);
@@ -25,8 +39,7 @@ public class Main {
             admin.doOneStep();
             if (map.getNotReachYet() == 0) break;
             System.out.println(map.getNotReachYet());
-        }
-
+        }*/
 
 
 

@@ -96,6 +96,7 @@ public class Map extends Observable {
         return (this.matrix[p.getX()][p.getY()].getValue() != BORDER);
     }
 
+
     public void agentMove(MyAgent a, Point oldPoint, Point newPoint) {
         this.matrix[oldPoint.getX()][oldPoint.getY()].setValue(BEEN_HERE);
         if (this.getLocation(newPoint).getValue() == Map.REGULAR) {
