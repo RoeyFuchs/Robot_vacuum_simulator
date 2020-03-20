@@ -29,7 +29,12 @@ public class Map extends Observable {
     }
 
     public Map(Map map) {
-        this.matrix = map.getMatrix().clone();
+        this.matrix = new Point[map.getRowsNumber()][map.getColumnsNumber()];
+        for (int i = 0; i < map.getRowsNumber(); i++) {
+            for(int j = 0; j < map.getColumnsNumber(); j++) {
+                this.matrix[i][j] = new Point(map.getLocation(new Point(i, j)));
+            }
+        }
     }
 
     //file start with  height, width and  and then matrix of integer as defined above

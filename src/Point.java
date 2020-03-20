@@ -76,6 +76,4 @@ public class Point {
         return this;
     }
 
-
-
 }
