@@ -12,15 +12,12 @@ public class Main {
         }
 
 
-        WavefrontAgent agent = new WavefrontAgent(map);
-        Administrator admin = new Administrator(map, agent);
-        Logger logger = new Logger("test.txt");
-        agent.addObserver(logger);
+        //WavefrontAgent agent = new WavefrontAgent(map, null);
 
 
-        /*
-        MyAgent agent=new DFSAgent(map);
-        Administrator admin = new Administrator(map, agent);
+        MyAgent agent=new GreedyHeuristic(map);
+        MyAgent agent1=new DFSAgent(map);
+        Administrator admin = new Administrator(map, agent1);
         map.printMap();
         int steps = 50;
         for (int i =0; i < steps ; i++) {
@@ -29,15 +26,13 @@ public class Main {
             admin.doOneStep();
         }
 
-        */
+        /*
         while(map.getNotReachYet() != 0) {
             map.printMap();
             admin.doOneStep();
-        }
-        logger.save();
-
+        }*/
         /*
-        int steps = 7;
+        int steps = 1000;
         for (int i =0; i < steps ; i++) {
             System.out.println(i);
             map.printMap();
@@ -66,7 +61,7 @@ public class Main {
         Administrator admin = new Administrator(map, agent);
 
         int numberOfSteps = 5;
-        Logger mapLogger = new Logger();
+        MapLogger mapLogger = new MapLogger();
         map.addObserver(mapLogger);
         for(int i = 0 ; i < numberOfSteps; i++) {//we need to change it
             map.printMap();

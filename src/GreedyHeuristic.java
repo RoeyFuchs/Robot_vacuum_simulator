@@ -1,80 +1,148 @@
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
- /*
-public class GreedyHeuristic extends BasicAgent {
+
+public class GreedyHeuristic implements MyAgent {
     private ShortestPath shortestPath;
+    private Map originalMap;
+    private Queue<Point> steps;
 
     GreedyHeuristic(Map map){
-        super(map);
+        this.originalMap=map;
         shortestPath=new ShortestPath(map);
+        steps=new LinkedList<>();
+        calculateSteps();
     }
-    private boolean checkRadiusWithinTheRoom(Point currentLoc,int radius){
-        if((currentLoc.getX()+radius<map.getRowsNumber())||
-                (currentLoc.getX()-radius>=0)||
-                (currentLoc.getY()+radius<map.getColumnsNumber())||
-                (currentLoc.getY()-radius>=0))
+    private boolean checkNorthSurround(Point currentLoc,int radius){
+        if((currentLoc.getX()-radius>=0))
             return true;
         return false;
     }
-    private List<Point>getLoctionsPerRadius(int radius){
-        int surround[]={-radius,radius};
-        List<Point> environment=new LinkedList<>();
-        Point agentLoc=super.getLocation();
-        //scan verical surround
-        for (int i=0; i<surround.length;i++){
-            for (int j=agentLoc.getY()-radius;
-            j<=agentLoc.getY()+radius;j++){
-                environment.add(new Point(agentLoc.getX()+surround[i],j));
-            }
+    private boolean checkSouthSurround(Point currentLoc,int radius,Map map){
+        if((currentLoc.getX()+radius<map.getRowsNumber()))
+            return true;
+        return false;
+    }
+    private boolean checkEastSurround(Point currentLoc,int radius,Map map){
+        if((currentLoc.getY()+radius<map.getColumnsNumber()))
+            return true;
+        return false;
+    }
+    private boolean checkWestSurround(Point currentLoc,int radius){
+        if((currentLoc.getY()-radius>=0))
+            return true;
+        return false;
+    }
+    private void scanEastSurround(int radius,LinkedList<Point>surrounding,Map map){
+        Point agentLoc=map.getAgentLocation();
+        for (int j = agentLoc.getX() - radius+1;
+             j < agentLoc.getX() + radius; j++) {
+            surrounding.add(new Point(j,agentLoc.getY() +radius));
         }
-        //scan vertical surround
-        for (int j=0; j<surround.length;j++){
-            for (int i=agentLoc.getX()-radius;
-                 i<=agentLoc.getX()+radius;i++){
-                environment.add(new Point(i,agentLoc.getY()+surround[j]));
-            }
+    }
+    private void scanWestSurround(int radius,LinkedList<Point>surrounding,Map map){
+        Point agentLoc=map.getAgentLocation();
+        for (int j = agentLoc.getX() + radius-1;
+             j > agentLoc.getX() - radius; j--) {
+            surrounding.add(new Point(j,agentLoc.getY() -radius));
         }
-        for (Point p:environment) {
+    }
+    private void scanNorthSurrond(int radius,LinkedList<Point>surrounding,Map map){
+        Point agentLoc=map.getAgentLocation();
+        for (int i = agentLoc.getY() - radius;
+             i <= agentLoc.getY() + radius; i++) {
+            surrounding.add(new Point(agentLoc.getX() -radius,i));
+        }
+    }
+    private void scanSouthSurround(int radius,LinkedList<Point>surrounding,Map map){
+        Point agentLoc=map.getAgentLocation();
+        for (int i =agentLoc.getY() + radius;
+             i >=agentLoc.getY() - radius; i--) {
+            surrounding.add(new Point(agentLoc.getX() +radius,i));
+        }
+    }
+    private boolean isLegalPoint(Point p,Map map){
+        if((p.getX()>=0&&p.getX()<map.getRowsNumber())&&
+        p.getY()>=0&&p.getY()<map.getColumnsNumber()){
+            return true;
+        }
+        return false;
+    }
+    private LinkedList<Point>getSurrounding(int radius,Point agentLoc,Map map){
+        //scan surrounding from upper right corner according to clockwise
+        LinkedList<Point> surrounding=new LinkedList<>();
+        if(checkNorthSurround(agentLoc,radius))
+            scanNorthSurrond(radius,surrounding,map);
+        if(checkEastSurround(agentLoc,radius,map))
+            scanEastSurround(radius,surrounding,map);
+        if(checkSouthSurround(agentLoc,radius,map))
+            scanSouthSurround(radius,surrounding,map);
+        if(checkWestSurround(agentLoc,radius))
+            scanWestSurround(radius,surrounding,map);
+        /*for (Point p:environment) {
             System.out.println("x: "+p.getX()+" y: "+p.getY());
-        }
-        return environment;
+        }*/
+        return surrounding;
     }
-    private List<Point> changePriorityOfEnvironment(List<Point>environment){
-        return null;
-    }
-    private List<Point> getRelevantSurroundingPoints(List<Point>environment){
-        List<Point> relevantPoints=new LinkedList<>();
+
+    private LinkedList<Point> getRelevantSurroundingPoints(List<Point>environment,Map map){
+        LinkedList<Point> relevantPoints=new LinkedList<>();
         for (Point p:environment) {
-            if(super.legalMove(p)&&!super.isBeenHere(p)){
+            if(isLegalPoint(p,map)&&map.legalMove(p)&&!map.isBeenHere(p)){
                 relevantPoints.add(p);
             }
         }
         return relevantPoints;
     }
-    @Override
-    public List<String> calculateSteps() {
-        int radius=0;
-        Point currentLoc=super.map.getLocation();
-        while (checkRadiusWithinTheRoom(currentLoc,radius)){
-            List<Point> surroundingPoints=getRelevantSurroundingPoints(getLoctionsPerRadius(radius));
+    private boolean checkSurrounding(Point currentLoc,int radius,Map map){
+        if(checkEastSurround(currentLoc,radius,map)||checkNorthSurround(currentLoc,radius)
+                ||checkSouthSurround(currentLoc,radius,map)||checkWestSurround(currentLoc,radius)){
+            return true;
+        }
+        return false;
+    }
+    private void calculateSteps() {
+        Map map=new Map(originalMap);
+        int radius=1;
+        Point currentLoc=map.getAgentLocation();
+        while (checkSurrounding(currentLoc,radius,map)){
+            Queue<Point> surroundingPoints=getRelevantSurroundingPoints(getSurrounding(radius,currentLoc,map),map);
             if (surroundingPoints.size()==0){
                 radius++;
             }else {
-                Stack<Point> path=shortestPath.BFS(super.map.getLocation(),point);
+                Point point=surroundingPoints.remove();
+                Stack<Point> path=shortestPath.BFS(currentLoc,point);
                 while (!path.empty()){
                     Point p=path.peek();
-                    if(!(p.isSameLocation(super.map.getLocation()))) {
-                        super.agentMove( super.map.getLocation(), p);
-                        mapSteps.add(map.getMapAsString());
+                    if(!(p.isSameLocation(currentLoc))) {
+                        map.agentMove(this,currentLoc, p);
+                        currentLoc=p;
+                        steps.add(currentLoc);
                     }
                     path.pop();
                 }
+                radius=1;
             }
         }
+    }
 
+    @Override
+    public Point getLocation() {
+        return this.originalMap.getAgentLocation();
+    }
+
+    @Override
+    public void setLocation(Point p) {
+        this.originalMap.agentMove(this,getLocation(),p);
+    }
+
+    @Override
+    public Point doStep() {
+        if(steps.size()>0){
+            return steps.remove();
+        }
         return null;
     }
 }
-*/
