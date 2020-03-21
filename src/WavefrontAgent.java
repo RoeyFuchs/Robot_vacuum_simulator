@@ -1,16 +1,17 @@
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Stack;
 
-public class WavefrontAgent implements MyAgent {
+public class WavefrontAgent extends Observable implements MyAgent   {
     private Map map;
     private Point current;
     private Stack<Point> prev = new Stack<>();
 
 
-    public WavefrontAgent(Map map, Object logger) { // don't forget to change the logger type
+    public WavefrontAgent(Map map) {
         this.map = new Map(map);
         new WaveFrontPreProcess().preProcess();
     }
@@ -19,46 +20,45 @@ public class WavefrontAgent implements MyAgent {
         int y = current.getY();
         int x = current.getX();
         Point max = null;
-        if (y > 0) {
-            if (canGo(new Point(x, y - 1))) {
+
+        //check all the options, clockwise, from north.
+
+        if (y > 0)//op. 1
+            if (canGo(new Point(x, y - 1)))
                 max = compare(max, this.map.getLocation(new Point(x, y - 1)));
-            }
-            if (x > 0) {
-                if (canGo(new Point(x - 1, y - 1))) {
-                    max = compare(max, this.map.getLocation(new Point(x - 1, y - 1)));
-                }
-            }
-            if (x < this.map.getRowsNumber() - 1) {
-                if (canGo(new Point(x + 1, y - 1))) {
-                    max = compare(max, this.map.getLocation(new Point(x + 1, y - 1)));
-                }
-            }
-        }
-        if (y < this.map.getColumnsNumber() - 1) {
-            if (canGo(new Point(x, y + 1))) {
-                max = compare(max, this.map.getLocation(new Point(x, y + 1)));
-            }
-            if (x > 0) {
-                if (canGo(new Point(x - 1, y + 1))) {
-                    max = compare(max, this.map.getLocation(new Point(x - 1, y + 1)));
-                }
-            }
-            if (x < this.map.getRowsNumber() - 1) {
-                if (canGo(new Point(x + 1, y + 1))) {
-                    max = compare(max, this.map.getLocation(new Point(x + 1, y + 1)));
-                }
-            }
-        }
-        if (x > 0) {
-            if (canGo(new Point(x - 1, y))) {
-                max = compare(max, this.map.getLocation(new Point(x - 1, y)));
-            }
-        }
-        if (x < this.map.getRowsNumber() - 1) {
-            if (canGo(new Point(x + 1, y))) {
+
+        if (y > 0 && x < this.map.getRowsNumber() - 1)  //op. 2
+            if (canGo(new Point(x + 1, y - 1)))
+                max = compare(max, this.map.getLocation(new Point(x + 1, y - 1)));
+
+
+        if (x < this.map.getRowsNumber() - 1) //op. 3
+            if (canGo(new Point(x + 1, y)))
                 max = compare(max, this.map.getLocation(new Point(x + 1, y)));
-            }
-        }
+
+        if (y < this.map.getColumnsNumber() - 1 && x < this.map.getRowsNumber() - 1)  // op. 4
+            if (canGo(new Point(x + 1, y + 1)))
+                max = compare(max, this.map.getLocation(new Point(x + 1, y + 1)));
+
+
+        if (y < this.map.getColumnsNumber() - 1)  //op. 5
+            if (canGo(new Point(x, y + 1)))
+                max = compare(max, this.map.getLocation(new Point(x, y + 1)));
+
+
+        if (y < this.map.getColumnsNumber() - 1 && x > 0)  //op. 6
+            if (canGo(new Point(x - 1, y + 1)))
+                max = compare(max, this.map.getLocation(new Point(x - 1, y + 1)));
+
+
+        if (x > 0)  // op. 7
+            if (canGo(new Point(x - 1, y)))
+                max = compare(max, this.map.getLocation(new Point(x - 1, y)));
+
+        if (y > 0 && x > 0) //op. 8
+            if (canGo(new Point(x - 1, y - 1)))
+                max = compare(max, this.map.getLocation(new Point(x - 1, y - 1)));
+
         Point ret;
         if (max == null) {
             ret = this.prev.peek();
@@ -71,13 +71,21 @@ public class WavefrontAgent implements MyAgent {
     private Point compare(Point a, Point b) {
         if (a == null)
             return b;
+        notifyWithPlace("Compare (" + a.getX()+"," + a.getY() + ") & ("+b.getX()+"," + b.getY()+")");
         if (a.getInfo() >= b.getInfo())
             return a;
         return b;
     }
 
     private boolean canGo(Point p) {
+        notifyWithPlace("Check (" + p.getX()+"," + p.getY() + ")");
         return this.map.getLocation(p).getValue() == Map.REGULAR;
+    }
+
+    private void notifyWithPlace(String str) {
+        super.setChanged();
+        String cord = "Agent at ("+ this.current.getX() +"," + this.current.getY() +") ";
+        super.notifyObservers(cord + str + "\n");
     }
 
 
@@ -91,7 +99,8 @@ public class WavefrontAgent implements MyAgent {
             Point start, end;
             do {
                 start = WavefrontAgent.this.map.getLocation(WavefrontAgent.this.map.getAgentLocation());
-                end = WavefrontAgent.this.map.getLocation(new Point(rand.nextInt(maxRows), rand.nextInt(maxCulmns)));
+                //end = WavefrontAgent.this.map.getLocation(new Point(rand.nextInt(maxRows), rand.nextInt(maxCulmns)));
+                end = WavefrontAgent.this.map.getLocation(new Point(5, 15));
             }
             while (start.isSameLocation(end) || start.getValue() == Map.BORDER || end.getValue() == Map.BORDER);
 
@@ -138,13 +147,13 @@ public class WavefrontAgent implements MyAgent {
     }
 
 
-    //it is nesseery?
     public void setLocation(Point p) {
         if (!this.prev.empty() && p.isSameLocation(this.prev.peek())) {
             this.prev.pop();
         } else {
             this.prev.push(current);
         }
+        this.current.setValue(Map.BEEN_HERE);
         this.current = this.map.getLocation(p);
     }
 

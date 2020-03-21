@@ -5,11 +5,10 @@ import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MapLogger implements Observer {
+public class Logger implements Observer {
     BufferedWriter br;
 
-    public MapLogger() {
-        String fileName = "Map Log";
+    public Logger(String fileName) {
         try {
             this.br = new BufferedWriter(new FileWriter(fileName));
         }catch (IOException e) {

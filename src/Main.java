@@ -12,9 +12,13 @@ public class Main {
         }
 
 
-        //WavefrontAgent agent = new WavefrontAgent(map, null);
+        WavefrontAgent agent = new WavefrontAgent(map);
+        Administrator admin = new Administrator(map, agent);
+        Logger logger = new Logger("test.txt");
+        agent.addObserver(logger);
 
 
+        /*
         MyAgent agent=new DFSAgent(map);
         Administrator admin = new Administrator(map, agent);
         map.printMap();
@@ -25,13 +29,15 @@ public class Main {
             admin.doOneStep();
         }
 
-        /*
+        */
         while(map.getNotReachYet() != 0) {
             map.printMap();
             admin.doOneStep();
-        }*/
+        }
+        logger.save();
+
         /*
-        int steps = 1000;
+        int steps = 7;
         for (int i =0; i < steps ; i++) {
             System.out.println(i);
             map.printMap();
@@ -60,7 +66,7 @@ public class Main {
         Administrator admin = new Administrator(map, agent);
 
         int numberOfSteps = 5;
-        MapLogger mapLogger = new MapLogger();
+        Logger mapLogger = new Logger();
         map.addObserver(mapLogger);
         for(int i = 0 ; i < numberOfSteps; i++) {//we need to change it
             map.printMap();
