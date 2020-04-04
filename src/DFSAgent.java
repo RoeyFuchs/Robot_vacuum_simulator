@@ -15,6 +15,7 @@ public class DFSAgent implements MyAgent {
     }
 
     private void dfs(){
+        //Scans from north clockwise
         Map map= new Map(originalMap);
         int rows = map.getRowsNumber();
         int columns = map.getColumnsNumber();
@@ -64,8 +65,6 @@ public class DFSAgent implements MyAgent {
 
             }
         }
-        System.out.println("Map after DFS scan:");
-        System.out.println(originalMap.getMapAsString());
     }
 
     @Override
