@@ -1,3 +1,5 @@
+import sun.rmi.runtime.Log;
+
 import java.util.List;
 
 public class Main {
@@ -10,11 +12,21 @@ public class Main {
             e.printStackTrace();
             System.out.println(e.getStackTrace());
         }
+        WavefrontAgent agent = new WavefrontAgent(map);
+        Administrator admin = new Administrator(map, agent);
+        Logger logger = new Logger("test1.txt");
+        agent.addObserver(logger);
+
+        while(map.getNotReachYet() != 0 ){
+            admin.doOneStep();
+            map.printMap();
+        }
 
 
-        //WavefrontAgent agent = new WavefrontAgent(map, null);
 
+        
 
+        /*
         MyAgent agent=new GreedyHeuristic(map);
         MyAgent agent1=new DFSAgent(map);
         Administrator admin = new Administrator(map, agent1);
@@ -25,6 +37,7 @@ public class Main {
             map.printMap();
             admin.doOneStep();
         }
+        */
 
         /*
         while(map.getNotReachYet() != 0) {
@@ -40,7 +53,6 @@ public class Main {
             if (map.getNotReachYet() == 0) break;
             System.out.println(map.getNotReachYet());
         }*/
-
 
 
 
