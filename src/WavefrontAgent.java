@@ -99,8 +99,7 @@ public class WavefrontAgent extends Observable implements MyAgent   {
             Point start, end;
             do {
                 start = WavefrontAgent.this.map.getLocation(WavefrontAgent.this.map.getAgentLocation());
-                //end = WavefrontAgent.this.map.getLocation(new Point(rand.nextInt(maxRows), rand.nextInt(maxCulmns)));
-                end = WavefrontAgent.this.map.getLocation(new Point(5, 15));
+                end = WavefrontAgent.this.map.getLocation(new Point(rand.nextInt(maxRows), rand.nextInt(maxCulmns)));
             }
             while (start.isSameLocation(end) || start.getValue() == Map.BORDER || end.getValue() == Map.BORDER);
 

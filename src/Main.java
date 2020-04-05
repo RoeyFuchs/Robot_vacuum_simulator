@@ -24,7 +24,7 @@ public class Main {
 
 
 
-        
+
 
         /*
         MyAgent agent=new GreedyHeuristic(map);
