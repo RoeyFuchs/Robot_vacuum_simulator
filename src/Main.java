@@ -21,6 +21,7 @@ public class Main {
             admin.doOneStep();
             map.printMap();
         }
+        logger.save();
 
 
 
