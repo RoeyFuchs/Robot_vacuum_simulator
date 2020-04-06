@@ -12,10 +12,10 @@ public class Main {
             e.printStackTrace();
             System.out.println(e.getStackTrace());
         }
-        WavefrontAgent agent = new WavefrontAgent(map);
-        Administrator admin = new Administrator(map, agent);
+        GreedyHeuristic agent = new GreedyHeuristic(map);
         Logger logger = new Logger("test1.txt");
         agent.addObserver(logger);
+        Administrator admin = new Administrator(map, agent);
 
         while(map.getNotReachYet() != 0 ){
             admin.doOneStep();

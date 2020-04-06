@@ -1,19 +1,18 @@
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 
-public class GreedyHeuristic implements MyAgent {
+public class GreedyHeuristic extends Observable implements MyAgent,Observer {
     private ShortestPath shortestPath;
     private Map originalMap;
     private Queue<Point> steps;
+    private boolean preProcessed;
 
     GreedyHeuristic(Map map){
         this.originalMap=map;
         shortestPath=new ShortestPath(map);
         steps=new LinkedList<>();
-        calculateSteps();
+        preProcessed=false;
+        shortestPath.addObserver(this);
     }
     private boolean checkNorthSurround(Point currentLoc,int radius){
         if((currentLoc.getX()-radius>=0))
@@ -87,9 +86,10 @@ public class GreedyHeuristic implements MyAgent {
         return surrounding;
     }
 
-    private LinkedList<Point> getRelevantSurroundingPoints(List<Point>environment,Map map){
+    private LinkedList<Point> getRelevantSurroundingPoints(List<Point>environment,Map map,Point agentLoc){
         LinkedList<Point> relevantPoints=new LinkedList<>();
         for (Point p:environment) {
+            checkPoint(p,agentLoc);
             if(isLegalPoint(p,map)&&map.legalMove(p)&&!map.isBeenHere(p)){
                 relevantPoints.add(p);
             }
@@ -103,12 +103,20 @@ public class GreedyHeuristic implements MyAgent {
         }
         return false;
     }
+    private void checkPoint(Point p,Point agentLoc) {
+        notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
+    }
+    private void notifyWithPlace(String str,Point p) {
+        super.setChanged();
+        super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
+    }
+
     private void calculateSteps() {
         Map map=new Map(originalMap);
         int radius=1;
         Point currentLoc=map.getAgentLocation();
         while (checkSurrounding(currentLoc,radius,map)){
-            Queue<Point> surroundingPoints=getRelevantSurroundingPoints(getSurrounding(radius,currentLoc,map),map);
+            Queue<Point> surroundingPoints=getRelevantSurroundingPoints(getSurrounding(radius,currentLoc,map),map,currentLoc);
             if (surroundingPoints.size()==0){
                 radius++;
             }else {
@@ -140,9 +148,19 @@ public class GreedyHeuristic implements MyAgent {
 
     @Override
     public Point doStep() {
+        if(!preProcessed){
+            preProcessed=true;
+            calculateSteps();
+        }
         if(steps.size()>0){
             return steps.remove();
         }
         return null;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        super.setChanged();
+        super.notifyObservers(arg);
     }
 }

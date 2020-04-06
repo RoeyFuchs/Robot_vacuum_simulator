@@ -1,17 +1,24 @@
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
-public class DFSAgent implements MyAgent {
+public class DFSAgent extends Observable implements MyAgent,Observer {
     private ShortestPath shortestPath;
     private Map originalMap;
     private Queue<Point> steps;
+    private boolean preProcess;
     public DFSAgent(Map originalMap){
         this.originalMap=originalMap;
         shortestPath=new ShortestPath(this.originalMap);
         steps=new LinkedList<>();
-        dfs();
+        preProcess=false;
+        shortestPath.addObserver(this);
+    }
+
+    private void checkPoint(Point p,Point agentLoc) {
+        notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
+    }
+    private void notifyWithPlace(String str,Point p) {
+        super.setChanged();
+        super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
     }
 
     private void dfs(){
@@ -24,6 +31,7 @@ public class DFSAgent implements MyAgent {
             stack.push(map.getAgentLocation());
             while (stack.empty() == false) {
                 Point point = stack.pop();
+                checkPoint(point,map.getAgentLocation());
                 if (point.getX() < 0 || point.getY() < 0 || point.getX() > rows ||
                         point.getY() > columns || map.isBeenHere(point))
                     continue;
@@ -79,9 +87,19 @@ public class DFSAgent implements MyAgent {
 
     @Override
     public Point doStep() {
+        if(!preProcess){
+            preProcess=true;
+            dfs();
+        }
         if (steps.size()>0){
             return steps.remove();
         }
         return null;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        super.setChanged();
+        super.notifyObservers(arg);
     }
 }

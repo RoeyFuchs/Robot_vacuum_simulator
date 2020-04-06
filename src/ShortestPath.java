@@ -1,8 +1,9 @@
 import java.util.LinkedList;
+import java.util.Observable;
 import java.util.Queue;
 import java.util.Stack;
 
-class ShortestPath {
+class ShortestPath extends Observable {
     private Map map;
     private final int NUM_OF_NEIGBORS=8;
     public ShortestPath(Map map){
@@ -35,6 +36,13 @@ class ShortestPath {
         public void SetCameFrom(Point point){
             this.cameFrom=point;
         }
+    }
+    private void checkPoint(Point p,Point agentLoc) {
+        notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
+    }
+    private void notifyWithPlace(String str,Point p) {
+        super.setChanged();
+        super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
     }
 
     //row and columns of 8 neighbors
@@ -76,7 +84,7 @@ class ShortestPath {
                 int row = pt.getX() + rowNum[i];
                 int col = pt.getY() + colNum[i];
 
-
+                checkPoint(new Point(row,col), src);
                 if (isValid(row, col) &&map.legalMove(new Point(row,col)) &&!visited[row][col].GetIsVisited()) {
                     // mark cell as visited and enqueue it
                     visited[row][col].SetIsVisited(true);
