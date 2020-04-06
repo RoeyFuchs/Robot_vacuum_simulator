@@ -71,21 +71,20 @@ public class WavefrontAgent extends Observable implements MyAgent   {
     private Point compare(Point a, Point b) {
         if (a == null)
             return b;
-        notifyWithPlace("Compare (" + a.getX()+"," + a.getY() + ") & ("+b.getX()+"," + b.getY()+")");
+        notifyWithPlace(LoggerMessageMaker.comparePoints(a,b));
         if (a.getInfo() >= b.getInfo())
             return a;
         return b;
     }
 
     private boolean canGo(Point p) {
-        notifyWithPlace("Check (" + p.getX()+"," + p.getY() + ")");
+        notifyWithPlace(LoggerMessageMaker.checkPoint(p));
         return this.map.getLocation(p).getValue() == Map.REGULAR;
     }
 
     private void notifyWithPlace(String str) {
         super.setChanged();
-        String cord = "Agent at ("+ this.current.getX() +"," + this.current.getY() +") ";
-        super.notifyObservers(cord + str + "\n");
+        super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,this.current));
     }
 
 

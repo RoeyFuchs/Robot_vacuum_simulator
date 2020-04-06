@@ -12,8 +12,8 @@ public class Main {
             e.printStackTrace();
             System.out.println(e.getStackTrace());
         }
-        GreedyHeuristic agent = new GreedyHeuristic(map);
-        Logger logger = new Logger("test1.txt");
+        WavefrontAgent agent = new WavefrontAgent(map);
+        Logger logger = new Logger("test2.txt");
         agent.addObserver(logger);
         Administrator admin = new Administrator(map, agent);
 
