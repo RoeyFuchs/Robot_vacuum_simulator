@@ -1,4 +1,7 @@
 public class LoggerMessageMaker {
+    public static String CHECK = "Check ";
+    public static String COMPARE = "Compare ";
+
     public static String checkPoint(Point p){
         return ("Check (" + p.getX()+"," + p.getY() + ")");
     }

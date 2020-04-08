@@ -13,7 +13,7 @@ public class Main {
             System.out.println(e.getStackTrace());
         }
         WavefrontAgent agent = new WavefrontAgent(map);
-        Logger logger = new Logger("test2.txt");
+        Logger logger = new Logger("test2.xml");
         agent.addObserver(logger);
         Administrator admin = new Administrator(map, agent);
 
