@@ -4,6 +4,9 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+
+
+
         System.out.println("Good luck");
         Map map = null;
         try {
@@ -16,12 +19,23 @@ public class Main {
         Logger logger = new Logger("test2.xml");
         agent.addObserver(logger);
         Administrator admin = new Administrator(map, agent);
+        int i=1;
 
         while(map.getNotReachYet() != 0 ){
             admin.doOneStep();
+            System.out.println(i);
             map.printMap();
+            i++;
         }
         logger.save();
+
+        var a=LoggerParser.GetReports("test2.xml");
+        for (Report r:a) {
+            System.out.println("Agent Loc: ("+r.getAgentLocation().getX()
+            +","+r.getAgentLocation().getY()+")");
+            System.out.println("Checked points: "+r.GetPointsChecked().size());
+            System.out.println("Compared points: "+r.GetPointsCompared().size());
+        }
 
 
 
