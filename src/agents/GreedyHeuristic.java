@@ -1,7 +1,13 @@
+package agents;
+
 import java.util.*;
 
+import loggers.LoggerMessageMaker;
+import tools.Map;
+import tools.Point;
 
-public class GreedyHeuristic extends Observable implements MyAgent,Observer {
+
+public class GreedyHeuristic extends Observable implements Agent,Observer {
     private ShortestPath shortestPath;
     private Map originalMap;
     private Queue<Point> steps;
@@ -14,62 +20,62 @@ public class GreedyHeuristic extends Observable implements MyAgent,Observer {
         preProcessed=false;
         shortestPath.addObserver(this);
     }
-    private boolean checkNorthSurround(Point currentLoc,int radius){
+    private boolean checkNorthSurround(Point currentLoc, int radius){
         if((currentLoc.getX()-radius>=0))
             return true;
         return false;
     }
-    private boolean checkSouthSurround(Point currentLoc,int radius,Map map){
+    private boolean checkSouthSurround(Point currentLoc, int radius, Map map){
         if((currentLoc.getX()+radius<map.getRowsNumber()))
             return true;
         return false;
     }
-    private boolean checkEastSurround(Point currentLoc,int radius,Map map){
+    private boolean checkEastSurround(Point currentLoc, int radius, Map map){
         if((currentLoc.getY()+radius<map.getColumnsNumber()))
             return true;
         return false;
     }
-    private boolean checkWestSurround(Point currentLoc,int radius){
+    private boolean checkWestSurround(Point currentLoc, int radius){
         if((currentLoc.getY()-radius>=0))
             return true;
         return false;
     }
-    private void scanEastSurround(int radius,LinkedList<Point>surrounding,Map map){
+    private void scanEastSurround(int radius, LinkedList<Point>surrounding, Map map){
         Point agentLoc=map.getAgentLocation();
         for (int j = agentLoc.getX() - radius+1;
              j < agentLoc.getX() + radius; j++) {
             surrounding.add(new Point(j,agentLoc.getY() +radius));
         }
     }
-    private void scanWestSurround(int radius,LinkedList<Point>surrounding,Map map){
+    private void scanWestSurround(int radius, LinkedList<Point>surrounding, Map map){
         Point agentLoc=map.getAgentLocation();
         for (int j = agentLoc.getX() + radius-1;
              j > agentLoc.getX() - radius; j--) {
             surrounding.add(new Point(j,agentLoc.getY() -radius));
         }
     }
-    private void scanNorthSurrond(int radius,LinkedList<Point>surrounding,Map map){
+    private void scanNorthSurrond(int radius, LinkedList<Point>surrounding, Map map){
         Point agentLoc=map.getAgentLocation();
         for (int i = agentLoc.getY() - radius;
              i <= agentLoc.getY() + radius; i++) {
             surrounding.add(new Point(agentLoc.getX() -radius,i));
         }
     }
-    private void scanSouthSurround(int radius,LinkedList<Point>surrounding,Map map){
+    private void scanSouthSurround(int radius, LinkedList<Point>surrounding, Map map){
         Point agentLoc=map.getAgentLocation();
         for (int i =agentLoc.getY() + radius;
              i >=agentLoc.getY() - radius; i--) {
             surrounding.add(new Point(agentLoc.getX() +radius,i));
         }
     }
-    private boolean isLegalPoint(Point p,Map map){
+    private boolean isLegalPoint(Point p, Map map){
         if((p.getX()>=0&&p.getX()<map.getRowsNumber())&&
         p.getY()>=0&&p.getY()<map.getColumnsNumber()){
             return true;
         }
         return false;
     }
-    private LinkedList<Point>getSurrounding(int radius,Point agentLoc,Map map){
+    private LinkedList<Point>getSurrounding(int radius, Point agentLoc, Map map){
         //scan surrounding from upper right corner according to clockwise
         LinkedList<Point> surrounding=new LinkedList<>();
         if(checkNorthSurround(agentLoc,radius))
@@ -80,13 +86,13 @@ public class GreedyHeuristic extends Observable implements MyAgent,Observer {
             scanSouthSurround(radius,surrounding,map);
         if(checkWestSurround(agentLoc,radius))
             scanWestSurround(radius,surrounding,map);
-        /*for (Point p:environment) {
+        /*for (tools.Point p:environment) {
             System.out.println("x: "+p.getX()+" y: "+p.getY());
         }*/
         return surrounding;
     }
 
-    private LinkedList<Point> getRelevantSurroundingPoints(List<Point>environment,Map map,Point agentLoc){
+    private LinkedList<Point> getRelevantSurroundingPoints(List<Point>environment, Map map, Point agentLoc){
         LinkedList<Point> relevantPoints=new LinkedList<>();
         for (Point p:environment) {
             checkPoint(p,agentLoc);
@@ -96,17 +102,17 @@ public class GreedyHeuristic extends Observable implements MyAgent,Observer {
         }
         return relevantPoints;
     }
-    private boolean checkSurrounding(Point currentLoc,int radius,Map map){
+    private boolean checkSurrounding(Point currentLoc, int radius, Map map){
         if(checkEastSurround(currentLoc,radius,map)||checkNorthSurround(currentLoc,radius)
                 ||checkSouthSurround(currentLoc,radius,map)||checkWestSurround(currentLoc,radius)){
             return true;
         }
         return false;
     }
-    private void checkPoint(Point p,Point agentLoc) {
+    private void checkPoint(Point p, Point agentLoc) {
         notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
     }
-    private void notifyWithPlace(String str,Point p) {
+    private void notifyWithPlace(String str, Point p) {
         super.setChanged();
         super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
     }

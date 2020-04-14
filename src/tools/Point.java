@@ -1,4 +1,4 @@
-
+package tools;
 
 public class Point {
     private int x;

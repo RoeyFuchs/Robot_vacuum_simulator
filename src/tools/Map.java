@@ -1,9 +1,11 @@
+package tools;
+
+import agents.Agent;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +104,7 @@ public class Map extends Observable {
     }
 
 
-    public void agentMove(MyAgent a, Point oldPoint, Point newPoint) {
+    public void agentMove(Agent a, Point oldPoint, Point newPoint) {
         this.matrix[oldPoint.getX()][oldPoint.getY()].setValue(BEEN_HERE);
         if (this.getLocation(newPoint).getValue() == Map.REGULAR) {
             this.notReachYet--;

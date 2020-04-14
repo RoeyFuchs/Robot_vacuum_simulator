@@ -1,6 +1,12 @@
+package agents;
+
 import java.util.*;
 
-public class DFSAgent extends Observable implements MyAgent,Observer {
+import loggers.LoggerMessageMaker;
+import tools.Map;
+import tools.Point;
+
+public class DFSAgent extends Observable implements Agent,Observer {
     private ShortestPath shortestPath;
     private Map originalMap;
     private Queue<Point> steps;
@@ -13,10 +19,10 @@ public class DFSAgent extends Observable implements MyAgent,Observer {
         shortestPath.addObserver(this);
     }
 
-    private void checkPoint(Point p,Point agentLoc) {
+    private void checkPoint(Point p, Point agentLoc) {
         notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
     }
-    private void notifyWithPlace(String str,Point p) {
+    private void notifyWithPlace(String str, Point p) {
         super.setChanged();
         super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
     }

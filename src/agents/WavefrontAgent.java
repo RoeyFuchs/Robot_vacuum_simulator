@@ -1,11 +1,17 @@
+package agents;
+
+import loggers.LoggerMessageMaker;
+import tools.Map;
+import tools.Point;
+
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Stack;
 
-public class WavefrontAgent extends Observable implements MyAgent   {
+
+public class WavefrontAgent extends Observable implements Agent {
     private Map map;
     private Point current;
     private Stack<Point> prev = new Stack<>();

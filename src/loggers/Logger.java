@@ -1,3 +1,5 @@
+package loggers;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +20,8 @@ import org.w3c.dom.Element;
 import java.io.File;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import tools.Map;
+import tools.Point;
 
 public class Logger implements Observer {
     XMLGenerator xmlGenerator;
@@ -71,7 +75,7 @@ public class Logger implements Observer {
         void newEntery(String str) {
             this.queue.offer(str);
         }
-
+        //this function continue to run while the programe is running, and create real-time xml fields
         void management() {
             synchronized (this.locker) {
                 while (!stop || !this.queue.isEmpty()) {
@@ -106,7 +110,6 @@ public class Logger implements Observer {
                 }
             }
         }
-
         void newPoint(Point p) {
             this.currentPointElemnt = this.doc.createElement("Point");
             this.rootElement.appendChild(this.currentPointElemnt);

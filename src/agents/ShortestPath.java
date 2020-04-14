@@ -1,7 +1,13 @@
+package agents;
+
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Queue;
 import java.util.Stack;
+
+import loggers.LoggerMessageMaker;
+import tools.Map;
+import tools.Point;
 
 class ShortestPath extends Observable {
     private Map map;
@@ -37,10 +43,10 @@ class ShortestPath extends Observable {
             this.cameFrom=point;
         }
     }
-    private void checkPoint(Point p,Point agentLoc) {
+    private void checkPoint(Point p, Point agentLoc) {
         notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
     }
-    private void notifyWithPlace(String str,Point p) {
+    private void notifyWithPlace(String str, Point p) {
         super.setChanged();
         super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
     }
@@ -62,7 +68,7 @@ class ShortestPath extends Observable {
     }
 
     public Stack<Point> BFS(Point src,
-                   Point dest) {
+                            Point dest) {
         VisitedPoint[][] visited = new VisitedPoint[map.getRowsNumber()][map.getColumnsNumber()];
         for (int i=0;i<map.getRowsNumber();i++){
             for (int j=0;j<map.getColumnsNumber();j++){
