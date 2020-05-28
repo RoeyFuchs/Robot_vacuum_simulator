@@ -6,6 +6,7 @@ import tools.Map;
 public class Main {
     public static void main(String[] args) {
 
+
         System.out.println("Good luck");
         Map map = null;
         try {
@@ -15,7 +16,7 @@ public class Main {
             System.out.println(e.getStackTrace());
         }
         WavefrontAgent agent = new WavefrontAgent(map);
-        Logger logger = new Logger("test2.xml");
+        Logger logger = new Logger("WaveFrontAgent.xml");
         agent.addObserver(logger);
         Administrator admin = new Administrator(map, agent);
         int i=1;
@@ -27,7 +28,6 @@ public class Main {
             i++;
         }
         logger.save();
-
 
     }
 }

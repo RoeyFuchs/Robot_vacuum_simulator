@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -138,6 +139,8 @@ public class Logger implements Observer {
                 try {
                     TransformerFactory transformerFactory = TransformerFactory.newInstance();
                     Transformer transformer = transformerFactory.newTransformer();
+                    transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                     DOMSource source = new DOMSource(this.doc);
                     StreamResult result = new StreamResult(new File(fileName));
                     transformer.transform(source, result);
