@@ -2,6 +2,7 @@ package agents;
 
 import java.util.*;
 
+import loggers.Logger;
 import loggers.LoggerMessageMaker;
 import tools.Map;
 import tools.Point;
@@ -13,7 +14,7 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
     private Queue<Point> steps;
     private boolean preProcessed;
 
-    GreedyHeuristic(Map map){
+    public GreedyHeuristic(Map map){
         this.originalMap=map;
         shortestPath=new ShortestPath(map);
         steps=new LinkedList<>();
@@ -162,6 +163,11 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
             return steps.remove();
         }
         return null;
+    }
+
+    @Override
+    public void addObserver(Logger logger) {
+        super.addObserver(logger);
     }
 
     @Override

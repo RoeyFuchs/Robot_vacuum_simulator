@@ -1,5 +1,6 @@
 package agents;
 
+import loggers.Logger;
 import loggers.LoggerMessageMaker;
 import tools.Map;
 import tools.Point;
@@ -72,6 +73,11 @@ public class WavefrontAgent extends Observable implements Agent {
             ret = max;
         }
         return ret;
+    }
+
+    @Override
+    public void addObserver(Logger logger) {
+        super.addObserver(logger);
     }
 
     private Point compare(Point a, Point b) {

@@ -2,6 +2,7 @@ package agents;
 
 import java.util.*;
 
+import loggers.Logger;
 import loggers.LoggerMessageMaker;
 import tools.Map;
 import tools.Point;
@@ -101,6 +102,11 @@ public class DFSAgent extends Observable implements Agent,Observer {
             return steps.remove();
         }
         return null;
+    }
+
+    @Override
+    public void addObserver(Logger logger) {
+        super.addObserver(logger);
     }
 
     @Override

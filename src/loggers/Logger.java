@@ -8,6 +8,7 @@ import java.util.Observer;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -26,11 +27,11 @@ import tools.Point;
 
 public class Logger implements Observer {
     XMLGenerator xmlGenerator;
-    String fileName;
+    Result result;
 
-    public Logger(String fileName) {
+    public Logger(Result result) {
         this.xmlGenerator = new XMLGenerator();
-        this.fileName = fileName;
+        this.result = result;
     }
 
     @Override
@@ -39,7 +40,7 @@ public class Logger implements Observer {
     }
 
     public void save() {
-        this.xmlGenerator.save(this.fileName);
+        this.xmlGenerator.save(this.result);
     }
 
     private class XMLGenerator {
@@ -133,7 +134,7 @@ public class Logger implements Observer {
         }
 
 
-        void save(String fileName) {
+        void save(Result result) {
             newEntery("");
             synchronized (this.locker) {
                 try {
@@ -142,9 +143,7 @@ public class Logger implements Observer {
                     transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
                     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                     DOMSource source = new DOMSource(this.doc);
-                    StreamResult result = new StreamResult(new File(fileName));
                     transformer.transform(source, result);
-
                 } catch (Exception e) {
                     System.out.println("Error while saving XML file");
                 }
