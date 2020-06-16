@@ -147,7 +147,6 @@ public class WavefrontAgent extends Observable implements Agent {
                 if (x < WavefrontAgent.this.map.getRowsNumber() - 1)
                     this.checkAndAddPoint(WavefrontAgent.this.map.getLocation(new Point(x + 1, y)), info, pointsList);
             }
-            WavefrontAgent.this.map.printMapInfo();
         }
 
         private void checkAndAddPoint(Point p, int info, Queue<Point> list) {

@@ -3,6 +3,7 @@ import agents.DFSAgent;
 import agents.GreedyHeuristic;
 import agents.WavefrontAgent;
 import loggers.Logger;
+import loggers.MapLogger;
 import tools.Administrator;
 import tools.Map;
 
@@ -13,10 +14,12 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 
 public class Main {
+    //cli flags
     private static String LOG_FILE_FLAG = "lf";
     private static String MAP_FILE_FLAG = "m";
     private static String STRATEGY_FLAG = "s";
     private static String MAX_ITER_FLAG = "l";
+    private static String MAP_LOGGER_FLAG = "lm";
 
 
     public static void main(String[] args) {
@@ -42,6 +45,7 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getStackTrace());
+            return;
         }
 
 
@@ -51,6 +55,7 @@ public class Main {
             return;
         }
 
+        //logger (of path)
         StreamResult result;
         if (cmd.hasOption(LOG_FILE_FLAG)) {
             result = new StreamResult(new File(cmd.getOptionValue(LOG_FILE_FLAG)));
@@ -59,28 +64,38 @@ public class Main {
         }
         Logger logger = new Logger(result);
         agent.addObserver(logger);
+
+        //logger (of map)
+        String mapLoggerFile = "";
+        if (cmd.hasOption(MAP_LOGGER_FLAG))
+            mapLoggerFile = cmd.getOptionValue(MAP_LOGGER_FLAG);
+        MapLogger mapLogger= new MapLogger(mapLoggerFile);
+
+        map.addObserver(mapLogger);
         Administrator admin = new Administrator(map, agent);
 
         Long i = 1L;
         Long limit = getMaxIter(cmd);
         while (map.getNotReachYet() != 0 && limit > i) {
             admin.doOneStep();
-            System.out.println(i);
-            map.printMap();
             i++;
         }
         logger.save();
+        mapLogger.save();
     }
 
+    //CLI Options
     private static Options getCLIOptions() {
         Options options = new Options();
         options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Log file. if didn't set - will print to consol.").create(LOG_FILE_FLAG));
         options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Map file").create(MAP_FILE_FLAG));
+        options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Map log file. if didn't set - will print to consol.").create(MAP_LOGGER_FLAG));
         options.addOption(OptionBuilder.withArgName("dfs/greedy/wavefront").hasArg().withDescription("Strategy").create(STRATEGY_FLAG));
         options.addOption(OptionBuilder.withArgName("number").hasArg().withDescription("limit for iteretions. if didn't set, won't be limit").create(MAX_ITER_FLAG));
         return options;
     }
 
+    //agent parser
     private static Agent createAgent(Map map, String agentType) {
         if (agentType.equals("dfs"))
             return new DFSAgent(map);
@@ -90,7 +105,7 @@ public class Main {
             return new WavefrontAgent(map);
         return null;
     }
-
+    //max iterations for agent, set by cli
     private static Long getMaxIter(CommandLine cmd) {
         if(cmd.hasOption(MAX_ITER_FLAG)) {
             return Long.parseLong(cmd.getOptionValue(MAX_ITER_FLAG));

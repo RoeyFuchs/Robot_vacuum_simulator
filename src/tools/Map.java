@@ -180,6 +180,7 @@ public class Map extends Observable {
 
     @Override
     public void notifyObservers() {
+        super.setChanged();
         super.notifyObservers(this.getMapAsString());
     }
 
