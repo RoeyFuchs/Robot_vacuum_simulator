@@ -12,7 +12,10 @@ Run the programe with these arguments:
  -s <dfs/greedy/wavefront>   Strategy
  ```
  ### Strategy
- The programe support greedy heuristic, dfs and wavefront (base on http://pinkwink.kr/attachment/cfile3.uf@1354654A4E8945BD13FE77.pdf and https://www.sciencedirect.com/science/article/pii/S092188901300167X)
+ The programe support:
+* Greedy Heuristic
+* DFS
+* WaveFront (base on http://pinkwink.kr/attachment/cfile3.uf@1354654A4E8945BD13FE77.pdf and https://www.sciencedirect.com/science/article/pii/S092188901300167X)
  ### Map Structer
  The map file will contain in the first row two number with comma between them the represent that rows and columns of map.
  Then, use numbers to define what the point is:
