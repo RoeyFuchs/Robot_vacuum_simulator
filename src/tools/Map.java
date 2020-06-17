@@ -12,24 +12,24 @@ import java.util.List;
 import java.util.Observable;
 
 public class Map extends Observable {
-    private Point[][] matrix;
+    private Point[][] matrix; //matrix of the map
+    private long notReachYet = 0; //how many points didn't reach yet
+
+    public static final Integer REGULAR = 1; //point that didn't reach yes
+    public static final Integer BEEN_HERE = 2; //point that already reached
+    public static final Integer BORDER = 3; //point that agent cant step on, like the border of the map.
+    public static final Integer AGENT = 9; //agent location
+
+    public static HashMap<Integer, Boolean> hash_map = new HashMap<>(); //using to check if the the number (REGULAR/BEEN_HERE/BORDER/AGENT) is correct
 
 
-    private long notReachYet = 0;
-
-    public static Integer REGULAR = 1;
-    public static Integer BEEN_HERE = 2;
-    public static Integer BORDER = 3;
-    public static Integer VACUUM = 9;
-
-    public static HashMap<Integer, Boolean> hash_map = new HashMap<>();
-
-
+    //create map from matrix
     private Map(Point[][] matrix) {
         this.matrix = matrix;
         this.notReachYet = this.countNotReachYet();
     }
 
+    //copy constructor
     public Map(Map map) {
         this.matrix = new Point[map.getRowsNumber()][map.getColumnsNumber()];
         for (int i = 0; i < map.getRowsNumber(); i++) {
@@ -46,26 +46,27 @@ public class Map extends Observable {
         BufferedReader br;
         br = new BufferedReader(new FileReader(file));
         str = br.readLine();
-        List<String> size = Arrays.asList(str.trim().split(","));
+        List<String> size = Arrays.asList(str.trim().split(",")); //get height and width
         Integer height = Integer.parseInt(size.get(0));
         Integer width = Integer.parseInt(size.get(1));
         Point matrix[][] = new Point[height][width];
         for (int i = 0; i < height; ++i) {
             str = br.readLine();
-            List<String> info = Arrays.asList(str.trim().split(" "));
+            List<String> info = Arrays.asList(str.trim().split(" ")); //get map information
             for (int j = 0; j < width; ++j) {
                 if (!Map.isValidNumber(Integer.parseInt(info.get(j)))) {
                     throw new IOException("Invalid number");
                 }
                 Point p = new Point(i, j);
-                p.setValue(Integer.parseInt(info.get(j)));
-                matrix[i][j] = p;
+                p.setValue(Integer.parseInt(info.get(j))); //set value
+                matrix[i][j] = p; //add to matrix
             }
         }
         br.close();
         return new Map(matrix);
     }
 
+    //get the entire map as string
     public String getMapAsString() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < this.getRowsNumber(); i++) {
@@ -78,6 +79,7 @@ public class Map extends Observable {
         return s.toString();
     }
 
+    //get the entire map  but _with info_ and _not_ value
     public String getInfoMapAsString() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < this.getRowsNumber(); i++) {
@@ -98,31 +100,36 @@ public class Map extends Observable {
         System.out.println(getInfoMapAsString());
     }
 
-
+    //check if move in legal (check if there is no border)
     public Boolean legalMove(Point p) {
-        return (this.matrix[p.getX()][p.getY()].getValue() != BORDER);
+        return (!this.matrix[p.getX()][p.getY()].getValue().equals(BORDER));
     }
 
 
+    //change the agent location
     public void agentMove(Agent a, Point oldPoint, Point newPoint) {
         this.matrix[oldPoint.getX()][oldPoint.getY()].setValue(BEEN_HERE);
-        if (this.getLocation(newPoint).getValue() == Map.REGULAR) {
+        if (this.getLocation(newPoint).getValue().equals(Map.REGULAR)) {
             this.notReachYet--;
         }
-        this.matrix[newPoint.getX()][newPoint.getY()].setValue(VACUUM);
+        this.matrix[newPoint.getX()][newPoint.getY()].setValue(AGENT);
+        this.updateVisit(newPoint);
         this.notifyObservers();
     }
 
+    //count how many point didn't reach yet
     private long countNotReachYet() {
         long counter = 0;
-        for (int i = 0; i < this.matrix.length; ++i) {
-            for (int j =0; j < this.matrix[0].length; ++j) {
-                if (this.matrix[i][j].getValue() == Map.REGULAR)
+        for (Point[] points : this.matrix) {
+            for (int j = 0; j < this.matrix[0].length; ++j) {
+                if (points[j].getValue().equals(Map.REGULAR))
                     counter++;
             }
         }
         return counter;
     }
+
+    //to check if a number is describe a correct value
     private static Boolean isValidNumber(Integer i) {
         Map.createValidationMap();
         return Map.hash_map.containsKey(i);
@@ -133,7 +140,7 @@ public class Map extends Observable {
             return;
         }
         Map.hash_map.put(Map.REGULAR, true);
-        Map.hash_map.put(Map.VACUUM, true);
+        Map.hash_map.put(Map.AGENT, true);
         Map.hash_map.put(Map.BEEN_HERE, true);
         Map.hash_map.put(Map.BORDER, true);
     }
@@ -141,21 +148,22 @@ public class Map extends Observable {
     public Point getAgentLocation() {
         for (int i = 0; i < this.matrix.length; ++i) {
             for (int j = 0; j < this.matrix[i].length; ++j)
-                if (this.matrix[i][j].getValue() == VACUUM)
+                if (this.matrix[i][j].getValue().equals(AGENT))
                     return new Point(i, j);
         }
-        return new Point(-1, -1);
+        return new Point(-1, -1); //if can't find an agent
     }
-
+    //get the original point from map
     public Point getLocation(Point point) {
         try {
             return matrix[point.getX()][point.getY()];
-        } catch (Exception E) {
-            System.out.println("@!#");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         return null;
     }
 
+    //update that agent was here
     public void updateVisit(Point point) {
         matrix[point.getX()][point.getY()].here();
     }

@@ -15,14 +15,15 @@ import java.io.File;
 
 public class Main {
     //cli flags
-    private static String LOG_FILE_FLAG = "lf";
-    private static String MAP_FILE_FLAG = "m";
-    private static String STRATEGY_FLAG = "s";
-    private static String MAX_ITER_FLAG = "l";
-    private static String MAP_LOGGER_FLAG = "lm";
+    private static final String LOG_FILE_FLAG = "lf";
+    private static final String MAP_FILE_FLAG = "m";
+    private static final String STRATEGY_FLAG = "s";
+    private static final String MAX_ITER_FLAG = "l";
+    private static final String MAP_LOGGER_FLAG = "lm";
 
 
     public static void main(String[] args) {
+        //cli parse
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
         try {
@@ -34,11 +35,13 @@ public class Main {
             formatter.printHelp(" ", Main.getCLIOptions());
             return;
         }
+        //check if map and strategy were set
         if (!cmd.hasOption(MAP_FILE_FLAG))
             System.err.println("Map file didn't set");
         if (!cmd.hasOption(STRATEGY_FLAG))
             System.err.println("Strategy didn't set");
 
+        //create map object
         Map map = null;
         try {
             map = Map.CreateMap(cmd.getOptionValue(MAP_FILE_FLAG));
@@ -48,7 +51,7 @@ public class Main {
             return;
         }
 
-
+        //create agent
         Agent agent = createAgent(map, cmd.getOptionValue(STRATEGY_FLAG));
         if (agent == null) {
             System.err.println("Strategy didn't recognize");
@@ -70,13 +73,12 @@ public class Main {
         if (cmd.hasOption(MAP_LOGGER_FLAG))
             mapLoggerFile = cmd.getOptionValue(MAP_LOGGER_FLAG);
         MapLogger mapLogger= new MapLogger(mapLoggerFile);
-
         map.addObserver(mapLogger);
-        Administrator admin = new Administrator(map, agent);
 
-        Long i = 1L;
+        Administrator admin = new Administrator(map, agent);
+        Long i = 1L; //counter iterations
         Long limit = getMaxIter(cmd);
-        while (map.getNotReachYet() != 0 && limit > i) {
+        while (map.getNotReachYet() != 0 && limit > i) { //continue until coverage or limit
             admin.doOneStep();
             i++;
         }
