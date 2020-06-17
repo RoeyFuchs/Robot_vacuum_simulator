@@ -30,8 +30,8 @@ public class Logger implements Observer {
     Result result;
 
     public Logger(Result result) {
-        this.xmlGenerator = new XMLGenerator();
-        this.result = result;
+        this.xmlGenerator = new XMLGenerator(); //save log as xml
+        this.result = result; //stream (file or system.out)
     }
 
     @Override
@@ -70,20 +70,21 @@ public class Logger implements Observer {
                 doc.appendChild(this.rootElement);
 
             } catch (Exception e) {
-                System.out.println("Error while create xml");
+                System.err.println("Error while create xml");
             }
         }
 
+        //add new entry to queue
         void newEntery(String str) {
             this.queue.offer(str);
         }
-        //this function continue to run while the programe is running, and create real-time xml fields
+        //this function continue to run while the program is running, and create real-time xml fields
         void management() {
             synchronized (this.locker) {
                 while (!stop || !this.queue.isEmpty()) {
                     try {
                         String entery = this.queue.take();
-                        if (entery.isEmpty()) {
+                        if (entery.isEmpty()) { //if get an empty entry, that mean that we finished
                             this.stop = true;
                             continue;
                         }
@@ -92,6 +93,7 @@ public class Logger implements Observer {
                             newPoint(curPoint);
                         }
                         entery = entery.substring(entery.indexOf(')')+1).trim(); //remove the current location of the agent and leading spaces (trim())
+                        //check if the entry is for checking
                         if (entery.startsWith(LoggerMessageMaker.CHECK)) {
                             entery = entery.replaceAll("[^0-9]+", " ");
                             List<String> nums = new LinkedList<>();
@@ -99,6 +101,7 @@ public class Logger implements Observer {
                             this.addCheck(new Point(Integer.parseInt(nums.get(0)), Integer.parseInt(nums.get(1))));
                             continue;
                         }
+                        //check if the entry is for comparing
                         if (entery.startsWith(LoggerMessageMaker.COMPARE)) {
                             entery = entery.replaceAll("[^0-9]+", " ");
                             List<String> nums = new LinkedList<>();
@@ -112,6 +115,7 @@ public class Logger implements Observer {
                 }
             }
         }
+        //the function create new current point
         void newPoint(Point p) {
             this.currentPointElemnt = this.doc.createElement("Point");
             this.rootElement.appendChild(this.currentPointElemnt);
@@ -121,12 +125,14 @@ public class Logger implements Observer {
             this.currentPoint = p;
         }
 
+        //add check attribute
         void addCheck(Point p) {
             Element checkPoint = this.doc.createElement("Check");
             checkPoint.appendChild(doc.createTextNode(getPointAsString(p)));
             this.currentPointElemnt.appendChild(checkPoint);
         }
 
+        //add compare attribute
         void addCompare(Point a, Point b) {
             Element checkPoint = this.doc.createElement("Compare");
             checkPoint.appendChild(doc.createTextNode(getPointAsString(a) + "," + getPointAsString(b)));
@@ -134,6 +140,7 @@ public class Logger implements Observer {
         }
 
 
+        //saving the xml. must call this function
         void save(Result result) {
             newEntery("");
             synchronized (this.locker) {
@@ -145,11 +152,12 @@ public class Logger implements Observer {
                     DOMSource source = new DOMSource(this.doc);
                     transformer.transform(source, result);
                 } catch (Exception e) {
-                    System.out.println("Error while saving XML file");
+                    System.err.println("Error while saving XML file");
                 }
             }
         }
 
+        //get point by string
         Point getCurrentPoint(String str) {
             str = str.replaceAll("[^0-9]+", " ");
             List<String> nums = new LinkedList<>();
@@ -158,6 +166,7 @@ public class Logger implements Observer {
         }
 
 
+        //get string of point from point object
         String getPointAsString(Point p) {
             return ("("+String.valueOf(p.getX()) + "," + String.valueOf(p.getY())+")");
         }

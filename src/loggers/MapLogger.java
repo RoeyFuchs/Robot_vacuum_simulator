@@ -12,6 +12,7 @@ import java.util.Observer;
 public class MapLogger implements Observer {
     PrintWriter printWriter;
 
+    //if the constructor get empty string, the logger will print to system.out
     public MapLogger(String fileName){
         if(!fileName.isEmpty()) {
             try {
@@ -29,6 +30,7 @@ public class MapLogger implements Observer {
     public void update(Observable o, Object arg) {
         this.printWriter.println(arg.toString());
     }
+    //must call save function when finish
     public void save(){
         this.printWriter.close();
     }

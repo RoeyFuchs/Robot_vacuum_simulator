@@ -2,9 +2,10 @@ package loggers;
 
 import tools.Point;
 
+//this class using for making same xml
 public class LoggerMessageMaker {
-    public static String CHECK = "Check ";
-    public static String COMPARE = "Compare ";
+    public static final String CHECK = "Check ";
+    public static final String COMPARE = "Compare ";
 
     public static String checkPoint(Point p){
         return ("Check (" + p.getX()+"," + p.getY() + ")");
