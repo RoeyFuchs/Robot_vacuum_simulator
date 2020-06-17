@@ -93,7 +93,7 @@ public class Main {
         options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Map file").create(MAP_FILE_FLAG));
         options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Map log file. if didn't set - will print to console.").create(MAP_LOGGER_FLAG));
         options.addOption(OptionBuilder.withArgName("dfs/greedy/wavefront").hasArg().withDescription("Strategy").create(STRATEGY_FLAG));
-        options.addOption(OptionBuilder.withArgName("number").hasArg().withDescription("limit for iteretions. if didn't set, won't be limit").create(MAX_ITER_FLAG));
+        options.addOption(OptionBuilder.withArgName("number").hasArg().withDescription("Limit for iteretions. if didn't set, won't be limit").create(MAX_ITER_FLAG));
         return options;
     }
 
