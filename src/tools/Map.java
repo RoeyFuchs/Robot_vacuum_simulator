@@ -158,7 +158,7 @@ public class Map extends Observable {
         try {
             return matrix[point.getX()][point.getY()];
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         return null;
     }
