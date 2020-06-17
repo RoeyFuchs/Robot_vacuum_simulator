@@ -89,9 +89,9 @@ public class Main {
     //CLI Options
     private static Options getCLIOptions() {
         Options options = new Options();
-        options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Log file. if didn't set - will print to consol.").create(LOG_FILE_FLAG));
+        options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Log file. if didn't set - will print to console.").create(LOG_FILE_FLAG));
         options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Map file").create(MAP_FILE_FLAG));
-        options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Map log file. if didn't set - will print to consol.").create(MAP_LOGGER_FLAG));
+        options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Map log file. if didn't set - will print to console.").create(MAP_LOGGER_FLAG));
         options.addOption(OptionBuilder.withArgName("dfs/greedy/wavefront").hasArg().withDescription("Strategy").create(STRATEGY_FLAG));
         options.addOption(OptionBuilder.withArgName("number").hasArg().withDescription("limit for iteretions. if didn't set, won't be limit").create(MAX_ITER_FLAG));
         return options;
