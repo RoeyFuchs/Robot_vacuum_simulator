@@ -8,7 +8,7 @@ import java.util.Stack;
 import loggers.LoggerMessageMaker;
 import tools.Map;
 import tools.Point;
-
+//get shortest path from source to target based on BFS scan
 class ShortestPath extends Observable {
     private Map map;
     private final int NUM_OF_NEIGBORS=8;
@@ -16,11 +16,11 @@ class ShortestPath extends Observable {
         this.map=map;
     }
 
+    //check if the location is in the map
      private boolean isValid(int row, int col) {
         return (row >= 0) && (row < map.getRowsNumber()) &&
                 (col >= 0) && (col < map.getColumnsNumber());
     }
-
     class VisitedPoint {
         private boolean isVisited;
         private Point cameFrom;
@@ -43,6 +43,7 @@ class ShortestPath extends Observable {
             this.cameFrom=point;
         }
     }
+    //notify observers: new point has been checked
     private void checkPoint(Point p, Point agentLoc) {
         notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
     }
@@ -55,6 +56,7 @@ class ShortestPath extends Observable {
     static int rowNum[] = {-1, -1, 0, 1,1,1,0,-1};
     static int colNum[] = {0, 1, 1, 1,0,-1,-1,-1};
 
+    //reconstruct map: from destination to source
     private Stack<Point> GetPath(VisitedPoint[][] visitedPoints, Point src, Point dst){
         Stack<Point> path=new Stack<>();
         Point currentPoint=dst;

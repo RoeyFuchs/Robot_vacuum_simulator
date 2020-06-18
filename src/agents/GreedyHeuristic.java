@@ -7,7 +7,7 @@ import loggers.LoggerMessageMaker;
 import tools.Map;
 import tools.Point;
 
-
+//based on:https://www.diva-portal.org/smash/get/diva2:1213349/FULLTEXT02.pdf
 public class GreedyHeuristic extends Observable implements Agent,Observer {
     private ShortestPath shortestPath;
     private Map originalMap;
@@ -21,6 +21,7 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
         preProcessed=false;
         shortestPath.addObserver(this);
     }
+    //check for legal step in each direction
     private boolean checkNorthSurround(Point currentLoc, int radius){
         if((currentLoc.getX()-radius>=0))
             return true;
@@ -41,6 +42,7 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
             return true;
         return false;
     }
+    //scan agent surround for potential spots
     private void scanEastSurround(int radius, LinkedList<Point>surrounding, Map map){
         Point agentLoc=map.getAgentLocation();
         for (int j = agentLoc.getX() - radius+1;
@@ -93,6 +95,7 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
         return surrounding;
     }
 
+    //collect all relevant spots within current radius
     private LinkedList<Point> getRelevantSurroundingPoints(List<Point>environment, Map map, Point agentLoc){
         LinkedList<Point> relevantPoints=new LinkedList<>();
         for (Point p:environment) {
@@ -110,6 +113,8 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
         }
         return false;
     }
+
+    //notify observers: new point has been checked
     private void checkPoint(Point p, Point agentLoc) {
         notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
     }
@@ -118,16 +123,20 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
         super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
     }
 
+    //calculate agent steps
     private void calculateSteps() {
         Map map=new Map(originalMap);
         int radius=1;
         Point currentLoc=map.getAgentLocation();
+        //scan map until all spots are been covered
         while (checkSurrounding(currentLoc,radius,map)){
             Queue<Point> surroundingPoints=getRelevantSurroundingPoints(getSurrounding(radius,currentLoc,map),map,currentLoc);
+            //if no relevant spot is found with current radius
             if (surroundingPoints.size()==0){
                 radius++;
             }else {
                 Point point=surroundingPoints.remove();
+                //get shortest path between current location and destination
                 Stack<Point> path=shortestPath.BFS(currentLoc,point);
                 while (!path.empty()){
                     Point p=path.peek();
@@ -154,6 +163,7 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
     }
 
     @Override
+    //get next agent's step
     public Point doStep() {
         if(!preProcessed){
             preProcessed=true;
