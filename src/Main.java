@@ -20,6 +20,7 @@ public class Main {
     private static final String STRATEGY_FLAG = "s";
     private static final String MAX_ITER_FLAG = "l";
     private static final String MAP_LOGGER_FLAG = "lm";
+    private static final String HELP_FLAG = "h";
 
 
     public static void main(String[] args) {
@@ -31,6 +32,11 @@ public class Main {
         } catch (Exception e) {
             System.err.println("Error while parse CLI");
             System.err.println(e.getMessage());
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp(" ", Main.getCLIOptions());
+            return;
+        }
+        if(cmd.hasOption(HELP_FLAG)) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(" ", Main.getCLIOptions());
             return;
@@ -89,11 +95,12 @@ public class Main {
     //CLI Options
     private static Options getCLIOptions() {
         Options options = new Options();
-        options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Log file. if didn't set - will print to console.").create(LOG_FILE_FLAG));
-        options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Map file").create(MAP_FILE_FLAG));
-        options.addOption(OptionBuilder.withArgName("file").hasArg().withDescription("Map log file. if didn't set - will print to console.").create(MAP_LOGGER_FLAG));
-        options.addOption(OptionBuilder.withArgName("dfs/greedy/wavefront").hasArg().withDescription("Strategy").create(STRATEGY_FLAG));
-        options.addOption(OptionBuilder.withArgName("number").hasArg().withDescription("Limit for iteretions. if didn't set, won't be limit").create(MAX_ITER_FLAG));
+        options.addOption(Option.builder(LOG_FILE_FLAG).hasArg().argName("file").desc("Log file. if didn't set - will print to console.").build());
+        options.addOption(Option.builder(MAP_FILE_FLAG).hasArg().argName("file").desc("Map file.").build());
+        options.addOption(Option.builder(MAP_LOGGER_FLAG).hasArg().argName("file").desc("Map log file. if didn't set - will print to console.").build());
+        options.addOption(Option.builder(STRATEGY_FLAG).hasArg().argName("dfs/greedy/wavefront").desc("Strategy.").build());
+        options.addOption(Option.builder(MAX_ITER_FLAG).hasArg().argName("number").desc("Limit for iteretions. if didn't set, won't be limit.").build());
+        options.addOption(Option.builder(HELP_FLAG).desc("print this message").build());
         return options;
     }
 
