@@ -5,11 +5,12 @@ The programe will output the path of the strategy and the map in every step.
 ## Usage
 Run the programe with these arguments:
 ```
- -l <number>                 Limit for iteretions. if didn't set, won't be limit
+ -h                          print this message
+ -l <number>                 Limit for iteretions. if didn't set, won't be limit.
  -lf <file>                  Log file. if didn't set - will print to console.
  -lm <file>                  Map log file. if didn't set - will print to console.
- -m <file>                   Map file
- -s <dfs/greedy/wavefront>   Strategy
+ -m <file>                   Map file.
+ -s <dfs/greedy/wavefront>   Strategy.
  ```
  ### Strategy
  The programe support:
