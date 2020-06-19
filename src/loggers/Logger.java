@@ -1,5 +1,7 @@
 package loggers;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import tools.Map;
 import tools.Point;
 
-public class Logger implements Observer {
+public class Logger implements PropertyChangeListener {
     XMLGenerator xmlGenerator;
     Result result;
 
@@ -34,13 +36,13 @@ public class Logger implements Observer {
         this.result = result; //stream (file or system.out)
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        this.xmlGenerator.newEntery(arg.toString());
-    }
-
     public void save() {
         this.xmlGenerator.save(this.result);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        this.xmlGenerator.newEntery(evt.getNewValue().toString());
     }
 
     private class XMLGenerator {

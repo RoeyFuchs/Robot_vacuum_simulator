@@ -2,6 +2,8 @@ package loggers;
 
 import tools.Map;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -9,7 +11,7 @@ import java.io.PrintWriter;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MapLogger implements Observer {
+public class MapLogger implements PropertyChangeListener {
     PrintWriter printWriter;
 
     //if the constructor get empty string, the logger will print to system.out
@@ -26,12 +28,15 @@ public class MapLogger implements Observer {
         }
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        this.printWriter.println(arg.toString());
-    }
+
     //must call save function when finish
     public void save(){
         this.printWriter.close();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
+        this.printWriter.println(evt.getNewValue().toString());
     }
 }

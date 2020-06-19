@@ -1,5 +1,8 @@
 package agents;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.*;
 
 import loggers.Logger;
@@ -7,25 +10,26 @@ import loggers.LoggerMessageMaker;
 import tools.Map;
 import tools.Point;
 
-public class DFSAgent extends Observable implements Agent,Observer {
+public class DFSAgent implements Agent, PropertyChangeListener {
     private ShortestPath shortestPath;
     private Map originalMap;
     private Queue<Point> steps;
     private boolean preProcess;
+    private PropertyChangeSupport pcs;
     public DFSAgent(Map originalMap){
+        pcs = new  PropertyChangeSupport(this);
         this.originalMap=originalMap;
         shortestPath=new ShortestPath(this.originalMap);
         steps=new LinkedList<>();
         preProcess=false;
-        shortestPath.addObserver(this);
+        shortestPath.addListener(this);
     }
 
     private void checkPoint(Point p, Point agentLoc) {
         notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
     }
     private void notifyWithPlace(String str, Point p) {
-        super.setChanged();
-        super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
+        pcs.firePropertyChange("Logger",null,LoggerMessageMaker.notifyWithPlace(str,p));
     }
 
     private void dfs(){
@@ -106,12 +110,11 @@ public class DFSAgent extends Observable implements Agent,Observer {
 
     @Override
     public void addObserver(Logger logger) {
-        super.addObserver(logger);
+        this.pcs.addPropertyChangeListener(logger);
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        super.setChanged();
-        super.notifyObservers(arg);
+    public void propertyChange(PropertyChangeEvent evt) {
+        pcs.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
     }
 }

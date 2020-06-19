@@ -1,5 +1,8 @@
 package agents;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.*;
 
 import loggers.Logger;
@@ -8,18 +11,21 @@ import tools.Map;
 import tools.Point;
 
 //based on:https://www.diva-portal.org/smash/get/diva2:1213349/FULLTEXT02.pdf
-public class GreedyHeuristic extends Observable implements Agent,Observer {
+public class GreedyHeuristic  implements Agent, PropertyChangeListener {
     private ShortestPath shortestPath;
     private Map originalMap;
     private Queue<Point> steps;
     private boolean preProcessed;
+    private PropertyChangeSupport pcs;
+
 
     public GreedyHeuristic(Map map){
+        pcs = new PropertyChangeSupport(this);
         this.originalMap=map;
         shortestPath=new ShortestPath(map);
         steps=new LinkedList<>();
         preProcessed=false;
-        shortestPath.addObserver(this);
+        shortestPath.addListener(this);
     }
     //check for legal step in each direction
     private boolean checkNorthSurround(Point currentLoc, int radius){
@@ -119,8 +125,7 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
         notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
     }
     private void notifyWithPlace(String str, Point p) {
-        super.setChanged();
-        super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
+        pcs.firePropertyChange("Logger",null,LoggerMessageMaker.notifyWithPlace(str,p));
     }
 
     //calculate agent steps
@@ -177,12 +182,12 @@ public class GreedyHeuristic extends Observable implements Agent,Observer {
 
     @Override
     public void addObserver(Logger logger) {
-        super.addObserver(logger);
+        this.pcs.addPropertyChangeListener(logger);
     }
 
+
     @Override
-    public void update(Observable o, Object arg) {
-        super.setChanged();
-        super.notifyObservers(arg);
+    public void propertyChange(PropertyChangeEvent evt) {
+        pcs.firePropertyChange(evt.getPropertyName(),evt.getOldValue(),evt.getNewValue());
     }
 }

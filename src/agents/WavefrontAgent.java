@@ -5,6 +5,8 @@ import loggers.LoggerMessageMaker;
 import tools.Map;
 import tools.Point;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Queue;
@@ -12,13 +14,15 @@ import java.util.Random;
 import java.util.Stack;
 
 //base on http://pinkwink.kr/attachment/cfile3.uf@1354654A4E8945BD13FE77.pdf and https://www.sciencedirect.com/science/article/pii/S092188901300167X
-public class WavefrontAgent extends Observable implements Agent {
+public class WavefrontAgent implements Agent {
     private Map map;
     private Point current;
     private Stack<Point> prev = new Stack<>();
+    private PropertyChangeSupport pcs;
 
 
     public WavefrontAgent(Map map) {
+        pcs = new PropertyChangeSupport(this);
         this.map = new Map(map);
         new WaveFrontPreProcess().preProcess();
     }
@@ -77,8 +81,9 @@ public class WavefrontAgent extends Observable implements Agent {
 
     @Override
     public void addObserver(Logger logger) {
-        super.addObserver(logger);
+        pcs.addPropertyChangeListener("Logger", logger);
     }
+
 
     //compare by info
     private Point compare(Point a, Point b) {
@@ -97,8 +102,11 @@ public class WavefrontAgent extends Observable implements Agent {
     }
 
     private void notifyWithPlace(String str) {
-        super.setChanged();
-        super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,this.current));
+        //super.setChanged();
+        //super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,this.current));
+        pcs.firePropertyChange("Logger",null,
+                LoggerMessageMaker.notifyWithPlace(str,this.current));
+
     }
 
 

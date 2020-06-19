@@ -2,6 +2,8 @@ package tools;
 
 import agents.Agent;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,9 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 
-public class Map extends Observable {
+public class Map {
     private Point[][] matrix; //matrix of the map
     private long notReachYet = 0; //how many points didn't reach yet
+    private PropertyChangeSupport pcs;
 
     public static final Integer REGULAR = 1; //point that didn't reach yes
     public static final Integer BEEN_HERE = 2; //point that already reached
@@ -22,15 +25,19 @@ public class Map extends Observable {
 
     public static HashMap<Integer, Boolean> hash_map = new HashMap<>(); //using to check if the the number (REGULAR/BEEN_HERE/BORDER/AGENT) is correct
 
-
+    public void addObserver(PropertyChangeListener l) {
+        pcs.addPropertyChangeListener("Map", l);
+    }
     //create map from matrix
     private Map(Point[][] matrix) {
+        pcs = new  PropertyChangeSupport(this);
         this.matrix = matrix;
         this.notReachYet = this.countNotReachYet();
     }
 
     //copy constructor
     public Map(Map map) {
+        this.pcs=map.pcs;
         this.matrix = new Point[map.getRowsNumber()][map.getColumnsNumber()];
         for (int i = 0; i < map.getRowsNumber(); i++) {
             for(int j = 0; j < map.getColumnsNumber(); j++) {
@@ -114,7 +121,7 @@ public class Map extends Observable {
         }
         this.matrix[newPoint.getX()][newPoint.getY()].setValue(AGENT);
         this.updateVisit(newPoint);
-        this.notifyObservers();
+        pcs.firePropertyChange("Map",null,this.getMapAsString());
     }
 
     //count how many point didn't reach yet
@@ -186,11 +193,6 @@ public class Map extends Observable {
         return this.matrix;
     }
 
-    @Override
-    public void notifyObservers() {
-        super.setChanged();
-        super.notifyObservers(this.getMapAsString());
-    }
 
     public long getNotReachYet() {
         return this.notReachYet;

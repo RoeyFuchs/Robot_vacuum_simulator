@@ -1,5 +1,7 @@
 package agents;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Queue;
@@ -9,11 +11,17 @@ import loggers.LoggerMessageMaker;
 import tools.Map;
 import tools.Point;
 //get shortest path from source to target based on BFS scan
-class ShortestPath extends Observable {
+class ShortestPath {
+    private PropertyChangeSupport pcs;
     private Map map;
     private final int NUM_OF_NEIGBORS=8;
     public ShortestPath(Map map){
         this.map=map;
+        pcs = new  PropertyChangeSupport(this);
+    }
+
+    public void addListener(PropertyChangeListener l){
+        this.pcs.addPropertyChangeListener("",l);
     }
 
     //check if the location is in the map
@@ -48,8 +56,7 @@ class ShortestPath extends Observable {
         notifyWithPlace(LoggerMessageMaker.checkPoint(p),agentLoc);
     }
     private void notifyWithPlace(String str, Point p) {
-        super.setChanged();
-        super.notifyObservers(LoggerMessageMaker.notifyWithPlace(str,p));
+        pcs.firePropertyChange("Logger",null,LoggerMessageMaker.notifyWithPlace(str,p));
     }
 
     //row and columns of 8 neighbors
