@@ -14,6 +14,7 @@ public class Administrator {
         this.map = map;
         agent.setLocation(map.getAgentLocation());
         this.agent.add(agent);
+        this.map.announceBegin();
     }
 
     public void doOneStep() {

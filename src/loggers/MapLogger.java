@@ -36,7 +36,6 @@ public class MapLogger implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
         this.printWriter.println(evt.getNewValue().toString());
     }
 }

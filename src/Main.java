@@ -52,7 +52,6 @@ public class Main {
         try {
             map = Map.CreateMap(cmd.getOptionValue(MAP_FILE_FLAG));
         } catch (Exception e) {
-            e.printStackTrace();
             System.err.println(e.getStackTrace());
             return;
         }

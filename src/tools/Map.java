@@ -2,6 +2,7 @@ package tools;
 
 import agents.Agent;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
@@ -44,6 +45,7 @@ public class Map {
                 this.matrix[i][j] = new Point(map.getLocation(new Point(i, j)));
             }
         }
+        this.notReachYet = map.getNotReachYet();
     }
 
     //file start with  height, width and  and then matrix of integer as defined above
@@ -121,6 +123,11 @@ public class Map {
         }
         this.matrix[newPoint.getX()][newPoint.getY()].setValue(AGENT);
         this.updateVisit(newPoint);
+        pcs.firePropertyChange("Map",null,this.getMapAsString());
+    }
+
+    //send the map to everyone
+    public void announceBegin() {
         pcs.firePropertyChange("Map",null,this.getMapAsString());
     }
 

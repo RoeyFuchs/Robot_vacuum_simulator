@@ -72,7 +72,11 @@ public class WavefrontAgent implements Agent {
 
         Point ret;
         if (max == null) { //if there no where to go, go back
-            ret = this.prev.peek();
+            if (this.prev.empty()) {
+                ret = this.current; //if the agent dont know where to go, stay in place
+            }else {
+                ret = this.prev.peek();
+            }
         } else {
             ret = max;
         }
