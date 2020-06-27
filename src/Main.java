@@ -52,7 +52,7 @@ public class Main {
         try {
             map = Map.CreateMap(cmd.getOptionValue(MAP_FILE_FLAG));
         } catch (Exception e) {
-            System.err.println(e.getStackTrace());
+            System.err.println("Error while creating map");
             return;
         }
 

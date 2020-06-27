@@ -165,7 +165,7 @@ public class Map {
                 if (this.matrix[i][j].getValue().equals(AGENT))
                     return new Point(i, j);
         }
-        return new Point(-1, -1); //if can't find an agent
+        throw new RuntimeException("Can't find Agent in map");
     }
     //get the original point from map
     public Point getLocation(Point point) {
