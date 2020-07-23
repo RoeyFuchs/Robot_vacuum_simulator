@@ -1,7 +1,4 @@
-import agents.Agent;
-import agents.DFSAgent;
-import agents.GreedyHeuristic;
-import agents.WavefrontAgent;
+import agents.*;
 import loggers.Logger;
 import loggers.MapLogger;
 import tools.Administrator;
@@ -97,7 +94,7 @@ public class Main {
         options.addOption(Option.builder(LOG_FILE_FLAG).hasArg().argName("file").desc("Log file. if didn't set - will print to console.").build());
         options.addOption(Option.builder(MAP_FILE_FLAG).hasArg().argName("file").desc("Map file.").build());
         options.addOption(Option.builder(MAP_LOGGER_FLAG).hasArg().argName("file").desc("Map log file. if didn't set - will print to console.").build());
-        options.addOption(Option.builder(STRATEGY_FLAG).hasArg().argName("dfs/greedy/wavefront").desc("Strategy.").build());
+        options.addOption(Option.builder(STRATEGY_FLAG).hasArg().argName("dfs/greedy/wavefront/random").desc("Strategy.").build());
         options.addOption(Option.builder(MAX_ITER_FLAG).hasArg().argName("number").desc("Limit for iteretions. if didn't set, won't be limit.").build());
         options.addOption(Option.builder(HELP_FLAG).desc("print this message").build());
         return options;
@@ -111,6 +108,8 @@ public class Main {
             return new GreedyHeuristic(map);
         if (agentType.equals("wavefront"))
             return new WavefrontAgent(map);
+        if(agentType.equals("random"))
+            return new RandomAgent(map);
         return null;
     }
     //max iterations for agent, set by cli
