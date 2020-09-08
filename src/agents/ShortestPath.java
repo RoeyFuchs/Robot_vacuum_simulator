@@ -69,7 +69,7 @@ class ShortestPath {
         Point currentPoint=dst;
         path.push(dst);
         while (!(currentPoint.isSameLocation(src))){
-            path.add(0,visitedPoints[currentPoint.getX()][currentPoint.getY()].GetCameFrom());
+            path.push(visitedPoints[currentPoint.getX()][currentPoint.getY()].GetCameFrom());
             currentPoint=visitedPoints[currentPoint.getX()][currentPoint.getY()].GetCameFrom();
         }
         //path.push(src);

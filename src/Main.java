@@ -83,6 +83,7 @@ public class Main {
         while (map.getNotReachYet() != 0 && limit > i) { //continue until coverage or limit
             admin.doOneStep();
             i++;
+            //System.out.println(i);
         }
         logger.save();
         mapLogger.save();

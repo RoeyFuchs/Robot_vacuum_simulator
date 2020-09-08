@@ -147,6 +147,7 @@ public class GreedyHeuristic  implements Agent, PropertyChangeListener {
                     Point p=path.peek();
                     if(!(p.isSameLocation(currentLoc))) {
                         map.agentMove(this,currentLoc, p);
+                        notifyWithPlace("",p);
                         currentLoc=p;
                         steps.add(currentLoc);
                     }

@@ -51,6 +51,7 @@ public class DFSAgent implements Agent, PropertyChangeListener {
                     Point p = path.peek();
                     if (!(p.isSameLocation(map.getAgentLocation()))) {
                         map.agentMove(this, map.getAgentLocation(), p);
+                        notifyWithPlace("",p);
                         steps.add(p);
                     }
                     path.pop();
